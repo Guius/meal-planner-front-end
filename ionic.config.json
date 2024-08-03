@@ -1,0 +1,7 @@
+{
+  "name": "meal-planner-front-end",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
