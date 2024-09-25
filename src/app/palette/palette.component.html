@@ -1,1 +1,29 @@
-<p>hello world</p>
+<ion-content>
+  <ion-card *ngFor="let item of this.recipes; index as i">
+    <ion-card-header>
+      <ion-card-title>{{ this.prettifyRecipeName(item.name) }}</ion-card-title>
+      <ion-card-subtitle
+        ><ion-chip
+          color="success"
+          *ngIf="this.colorPrepTime(item.totalTime) === 'Short'"
+          >{{ this.prettifyPrepTime(item.totalTime) }}</ion-chip
+        >
+        <ion-chip
+          color="warning"
+          *ngIf="this.colorPrepTime(item.totalTime) === 'Medium'"
+          >{{ this.prettifyPrepTime(item.totalTime) }}</ion-chip
+        >
+        <ion-chip
+          color="danger"
+          *ngIf="this.colorPrepTime(item.totalTime) === 'Long'"
+          >{{ this.prettifyPrepTime(item.totalTime) }}</ion-chip
+        >
+        | <strong>{{ item.recipeCuisine }}</strong></ion-card-subtitle
+      >
+    </ion-card-header>
+
+    <ion-card-content>
+      {{ this.giveMeSimpleIngredientList(item.recipeIngredient) }}
+    </ion-card-content>
+  </ion-card>
+</ion-content>
