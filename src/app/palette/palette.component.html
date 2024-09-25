@@ -18,7 +18,9 @@
           *ngIf="this.colorPrepTime(item.totalTime) === 'Long'"
           >{{ this.prettifyPrepTime(item.totalTime) }}</ion-chip
         >
-        | <strong>{{ item.recipeCuisine }}</strong></ion-card-subtitle
+        <ion-chip>{{ item.recipeCuisine }}</ion-chip>
+        <ion-chip *ngIf="item.diet === 'Non-Meat'">🥦</ion-chip
+        ><ion-chip *ngIf="item.diet === 'Meat'">🍖</ion-chip></ion-card-subtitle
       >
     </ion-card-header>
 
