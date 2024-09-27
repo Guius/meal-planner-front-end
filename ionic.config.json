@@ -3,6 +3,5 @@
   "integrations": {
     "capacitor": {}
   },
-  "type": "angular-standalone",
-  "mode": "ios"
+  "type": "angular-standalone"
 }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { Config } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,9 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(config: Config) {
+    const mode = config.get('mode');
+    console.log('>>>');
+    console.log(mode);
+  }
 }

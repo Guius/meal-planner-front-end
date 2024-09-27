@@ -12,6 +12,13 @@ import {
   IonContent,
   IonChip,
   IonCheckbox,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonIcon,
+  IonNote,
+  IonText,
+  IonInput,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 
@@ -334,6 +341,13 @@ export enum LengthGauge {
   standalone: true,
   providers: [PaletteService],
   imports: [
+    IonInput,
+    IonText,
+    IonNote,
+    IonIcon,
+    IonLabel,
+    IonItem,
+    IonList,
     IonCheckbox,
     IonChip,
     IonContent,

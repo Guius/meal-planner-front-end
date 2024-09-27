@@ -3,55 +3,15 @@
   grid-template-columns: 5fr 4fr;
   grid-template-rows: 1fr;
   height: 100vh;
-  overflow-y: hidden;
-  background-color: #f4f4f4f4;
+  /* overflow-y: hidden; */
+  padding: 50px;
 }
 
-.recipes {
-  grid-column: 1;
-  grid-row: 1;
-  padding: 10px 30px;
-  box-sizing: border-box;
-  height: 100vh;
-}
-
-.cart {
-  grid-column: 2;
-  grid-row: 1;
-  padding: 10px 30px;
-  box-sizing: border-box;
-  height: 100vh;
-}
-
-.recipes-title-box {
-  height: 15vh;
-}
-
-.cart-title-box {
-  height: 15vh;
-}
-
-.recipe-list-box {
-  box-sizing: border-box;
-  height: 85vh;
-}
-
-.cart-list-box {
-  box-sizing: border-box;
-  height: 85vh;
-}
-
-.recipes-list {
+ion-card {
   height: 100%;
-  overflow: scroll;
 }
 
-.cart-list {
-  height: 100%;
-  overflow: scroll;
-}
-
-.title {
-  padding: 30px;
-  font-size: xx-large;
+ion-card-content {
+  height: 87%;
+  overflow-y: scroll;
 }

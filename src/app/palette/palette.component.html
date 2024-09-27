@@ -1,64 +1,59 @@
 <ion-content>
   <div class="wrapper">
-    <div class="recipes">
-      <div class="recipes-title-box">
-        <span class="title">🥙 Recipes</span>
-      </div>
-      <div class="recipe-list-box">
-        <div class="recipes-list">
-          <ion-card *ngFor="let item of this.recipes; index as i">
-            <ion-card-header>
-              <ion-card-title>{{
-                this.prettifyRecipeName(item.name)
-              }}</ion-card-title>
-              <ion-card-subtitle
-                ><ion-chip
-                  color="success"
-                  *ngIf="this.colorPrepTime(item.totalTime) === 'Short'"
-                  >{{ this.prettifyPrepTime(item.totalTime) }}</ion-chip
-                >
-                <ion-chip
-                  color="warning"
-                  *ngIf="this.colorPrepTime(item.totalTime) === 'Medium'"
-                  >{{ this.prettifyPrepTime(item.totalTime) }}</ion-chip
-                >
-                <ion-chip
-                  color="danger"
-                  *ngIf="this.colorPrepTime(item.totalTime) === 'Long'"
-                  >{{ this.prettifyPrepTime(item.totalTime) }}</ion-chip
-                >
-                <ion-chip>{{ item.recipeCuisine }}</ion-chip>
-                <ion-chip *ngIf="item.diet === 'Non-Meat'">🥦</ion-chip
-                ><ion-chip *ngIf="item.diet === 'Meat'"
-                  >🍖</ion-chip
-                ></ion-card-subtitle
-              >
-            </ion-card-header>
-
-            <ion-card-content>
-              {{ this.giveMeSimpleIngredientList(item.recipeIngredient) }}
-            </ion-card-content>
-          </ion-card>
-        </div>
-      </div>
-    </div>
-    <div class="cart">
-      <div class="cart-title-box">
-        <span class="title">🛒 Cart</span>
-      </div>
-      <div class="cart-list-box">
-        <div class="cart-list">
-          <ion-card
-            ><ion-card-content>
-              <div
-                *ngFor="let item of this.simplifiedIngredientsList; index as i"
-              >
-                <ion-checkbox labelPlacement="end">{{ item }}</ion-checkbox>
-              </div>
-            </ion-card-content></ion-card
+    <ion-card class="recipes">
+      <ion-card-header>
+        <ion-card-title>Recipes</ion-card-title>
+        <ion-card-subtitle
+          >Select the recipes you wish for for the next food
+          shop</ion-card-subtitle
+        >
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item
+            detail="false"
+            *ngFor="let item of this.recipes; index as i"
           >
-        </div>
-      </div>
-    </div>
+            <ion-label>
+              <strong>{{ this.prettifyRecipeName(item.name) }}</strong
+              ><br />
+              <ion-text>{{ item.recipeCuisine }}</ion-text
+              ><br />
+              <ion-note color="medium" class="ion-text-wrap">
+                {{ this.giveMeSimpleIngredientList(item.recipeIngredient) }}
+              </ion-note>
+            </ion-label>
+            <div class="metadata-end-wrapper" slot="end">
+              <ion-note color="medium">{{
+                this.prettifyPrepTime(item.totalTime)
+              }}</ion-note>
+              <ion-icon color="medium" name="chevron-forward"></ion-icon>
+            </div>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+    <ion-card class="cart">
+      <ion-card-header>
+        <ion-card-title>Cart</ion-card-title>
+        <ion-card-subtitle
+          >Below is the shopping list to make this recipes
+          selected</ion-card-subtitle
+        >
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item
+            *ngFor="let item of this.simplifiedIngredientsList; index as i"
+          >
+            <ion-checkbox
+              slot="start"
+              aria-label="Toggle task completion"
+            ></ion-checkbox>
+            <ion-input aria-label="Task name" value="{{ item }}"></ion-input>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>
