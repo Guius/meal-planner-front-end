@@ -333,6 +333,11 @@ export enum LengthGauge {
   Unknown = 'Unknown',
 }
 
+export interface IngredientInformation {
+  unit: string;
+  amount: string;
+}
+
 @Component({
   selector: 'app-palette',
   templateUrl: 'palette.component.html',
@@ -365,6 +370,8 @@ export class PaletteComponent implements OnInit {
 
   simplifiedIngredientsList: string[] = [];
 
+  finalIngredients: Record<string, IngredientInformation> = {};
+
   constructor(private service: PaletteService) {
     console.log('hello');
   }
@@ -384,8 +391,18 @@ export class PaletteComponent implements OnInit {
       ingredientsList.push(this.recipes[recipeNumber].recipeIngredient);
     }
 
-    this.simplifiedIngredientsList =
-      this.giveMeFinalPaletteIngredientsList(ingredientsList);
+    this.giveMeFinalPaletteIngredientsList(ingredientsList);
+
+    for (let key in this.finalIngredients) {
+      if (this.finalIngredients.hasOwnProperty(key)) {
+        console.log(
+          `Key: ${key}, Value: ${this.finalIngredients[key].amount} - ${this.finalIngredients[key].unit}`
+        );
+        this.simplifiedIngredientsList.push(
+          `${key} - ${this.finalIngredients[key].amount} ${this.finalIngredients[key].unit}`
+        );
+      }
+    }
   }
 
   getRandomRecipes(numberOfRecipes: number) {
@@ -438,65 +455,64 @@ export class PaletteComponent implements OnInit {
     return notWaterIngredients.join(', ');
   }
 
-  giveMeFinalPaletteIngredientsList(ingredientLists: string[][]): string[] {
-    // convert ingredientsLists to simple ingredients list
-    const simpleIngredientLists: string[][] = [];
+  giveMeFinalPaletteIngredientsList(ingredientLists: string[][]): void {
     for (
       let listNumber = 0;
       listNumber < ingredientLists.length;
       listNumber++
     ) {
-      const ingredientNames = ingredientLists[listNumber].map(
-        (val: string): string => {
-          return (
-            val.split(' ').slice(2).join(' ') +
-            ' - ' +
-            val.split(' ').slice(0, 2).join(' ')
-          );
-        }
-      );
-
-      const notWaterIngredients = ingredientNames.filter(
-        (word) => !word.startsWith('Water')
-      );
-
-      simpleIngredientLists.push(notWaterIngredients);
-    }
-
-    console.log(simpleIngredientLists);
-
-    const finalIngredientsList: string[] = [];
-
-    /**
-     * Loop through each list provided and if the item is not already in the finalIngredientsList
-     * then add it
-     */
-    for (
-      let listNumber = 0;
-      listNumber < simpleIngredientLists.length;
-      listNumber++
-    ) {
-      // loop through ingredients of list n
       for (
         let ingredientNumber = 0;
-        ingredientNumber < simpleIngredientLists[listNumber].length;
+        ingredientNumber < ingredientLists[listNumber].length;
         ingredientNumber++
       ) {
-        if (
-          finalIngredientsList.includes(
-            simpleIngredientLists[listNumber][ingredientNumber]
-          )
-        ) {
-          continue;
+        // get the ingredient name
+        const ingredient = ingredientLists[listNumber][ingredientNumber];
+        const name = ingredient.split(' ').slice(2).join(' ');
+        const unit = ingredient.split(' ').slice(1, 2).join(' ');
+        let amount = ingredient.split(' ').slice(0, 1).join(' ');
+        if (amount === '½') amount = '0.5';
+
+        // check if the ingredient is in the finalIngredients
+        if (this.finalIngredients[name]) {
+          // it is
+          // check that the unit is the same
+
+          // get the ingredient unit
+          if (this.finalIngredients[name].unit === unit) {
+            // the units match.
+            // add up the amounts
+            this.finalIngredients[name].amount = `${
+              parseInt(this.finalIngredients[name].amount) + parseInt(amount)
+            }`;
+          } else {
+            // check if there's an item of `name(unit)`
+            if (this.finalIngredients[`${name}(${unit})`]) {
+              //the name(unit) matches
+              // add up the amounts
+              this.finalIngredients[`${name}(${unit})`].amount = `${
+                parseInt(this.finalIngredients[`${name}(${unit})`].amount) +
+                parseInt(amount)
+              }`;
+            } else {
+              // there is no name(unit) yet
+              // create a new one
+              this.finalIngredients[`${name}(${unit})`] = {
+                amount: amount,
+                unit: unit,
+              };
+            }
+          }
         } else {
-          finalIngredientsList.push(
-            simpleIngredientLists[listNumber][ingredientNumber]
-          );
+          // add it as a new item in the obj
+          // TODO: handle ½
+          this.finalIngredients[name] = {
+            amount: amount,
+            unit: unit,
+          };
         }
       }
     }
-
-    console.log(finalIngredientsList);
-    return finalIngredientsList;
+    return;
   }
 }
