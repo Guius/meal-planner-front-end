@@ -377,32 +377,7 @@ export class PaletteComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('hello');
-    this.recipes = fakePalette;
-    // this.getRandomRecipes(5);
-
-    // get the final ingredients list
-    const ingredientsList = [];
-    for (
-      let recipeNumber = 0;
-      recipeNumber < this.recipes.length;
-      recipeNumber++
-    ) {
-      ingredientsList.push(this.recipes[recipeNumber].recipeIngredient);
-    }
-
-    this.giveMeFinalPaletteIngredientsList(ingredientsList);
-
-    for (let key in this.finalIngredients) {
-      if (this.finalIngredients.hasOwnProperty(key)) {
-        console.log(
-          `Key: ${key}, Value: ${this.finalIngredients[key].amount} - ${this.finalIngredients[key].unit}`
-        );
-        this.simplifiedIngredientsList.push(
-          `${key} - ${this.finalIngredients[key].amount} ${this.finalIngredients[key].unit}`
-        );
-      }
-    }
+    this.getRandomRecipes(5);
   }
 
   getRandomRecipes(numberOfRecipes: number) {
@@ -410,6 +385,30 @@ export class PaletteComponent implements OnInit {
       next: (data) => {
         console.info(data);
         this.recipes = data;
+        // this.recipes = fakePalette;
+
+        // get the final ingredients list
+        const ingredientsList = [];
+        for (
+          let recipeNumber = 0;
+          recipeNumber < this.recipes.length;
+          recipeNumber++
+        ) {
+          ingredientsList.push(this.recipes[recipeNumber].recipeIngredient);
+        }
+
+        this.giveMeFinalPaletteIngredientsList(ingredientsList);
+
+        for (let key in this.finalIngredients) {
+          if (this.finalIngredients.hasOwnProperty(key)) {
+            console.log(
+              `Key: ${key}, Value: ${this.finalIngredients[key].amount} - ${this.finalIngredients[key].unit}`
+            );
+            this.simplifiedIngredientsList.push(
+              `${key} - ${this.finalIngredients[key].amount} ${this.finalIngredients[key].unit}`
+            );
+          }
+        }
       },
       error: (err) => {
         // TODO: put toaster up
