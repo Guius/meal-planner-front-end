@@ -11,6 +11,7 @@ import {
   IonCardHeader,
   IonContent,
   IonChip,
+  IonCheckbox,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 
@@ -328,10 +329,12 @@ export enum LengthGauge {
 @Component({
   selector: 'app-palette',
   templateUrl: 'palette.component.html',
+  styleUrl: 'palette.component.css',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   providers: [PaletteService],
   imports: [
+    IonCheckbox,
     IonChip,
     IonContent,
     IonCardHeader,
@@ -345,6 +348,8 @@ export enum LengthGauge {
 })
 export class PaletteComponent implements OnInit {
   recipes: RandomRecipeDto[] = [];
+
+  simplifiedIngredientsList: string[] = [];
 
   constructor(private service: PaletteService) {
     console.log('hello');
@@ -365,7 +370,8 @@ export class PaletteComponent implements OnInit {
       ingredientsList.push(this.recipes[recipeNumber].recipeIngredient);
     }
 
-    this.giveMeFinalPaletteIngredientsList(ingredientsList);
+    this.simplifiedIngredientsList =
+      this.giveMeFinalPaletteIngredientsList(ingredientsList);
   }
 
   getRandomRecipes(numberOfRecipes: number) {
@@ -428,7 +434,11 @@ export class PaletteComponent implements OnInit {
     ) {
       const ingredientNames = ingredientLists[listNumber].map(
         (val: string): string => {
-          return val.split(' ').slice(2).join(' ');
+          return (
+            val.split(' ').slice(2).join(' ') +
+            ' - ' +
+            val.split(' ').slice(0, 2).join(' ')
+          );
         }
       );
 
