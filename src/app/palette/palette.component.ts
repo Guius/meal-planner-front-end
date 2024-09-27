@@ -471,7 +471,14 @@ export class PaletteComponent implements OnInit {
         const name = ingredient.split(' ').slice(2).join(' ');
         const unit = ingredient.split(' ').slice(1, 2).join(' ');
         let amount = ingredient.split(' ').slice(0, 1).join(' ');
-        if (amount === '½') amount = '0.5';
+        if (amount === '½') {
+          amount = `${0.5}`;
+        } else {
+          const amountArray = amount.split('½');
+          if (amountArray.length > 1) {
+            amount = `${parseInt(amountArray[0]) + 0.5}`;
+          }
+        }
 
         // check if the ingredient is in the finalIngredients
         if (this.finalIngredients[name]) {
