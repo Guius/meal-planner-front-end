@@ -468,14 +468,25 @@ export class PaletteComponent implements OnInit {
         // get the ingredient name
         const ingredient = ingredientLists[listNumber][ingredientNumber];
         const name = ingredient.split(' ').slice(2).join(' ');
+
+        // check if ingredient name begins with water or boiled water
+        if (
+          name.toLowerCase().startsWith('water') ||
+          name.startsWith('boiled water')
+        ) {
+          continue;
+        }
+
         const unit = ingredient.split(' ').slice(1, 2).join(' ');
         let amount = ingredient.split(' ').slice(0, 1).join(' ');
         if (amount === '½') {
+          console.debug(`${name} amount is ½. Converting to 0.5`);
           amount = `${0.5}`;
         } else {
           const amountArray = amount.split('½');
           if (amountArray.length > 1) {
             amount = `${parseInt(amountArray[0]) + 0.5}`;
+            console.debug(`${name} amount contains ½. Converting to ${amount}`);
           }
         }
 
