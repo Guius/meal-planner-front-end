@@ -428,11 +428,14 @@ export class PaletteComponent implements OnInit {
         }
 
         // now make the object into an array so that the front end can easily show it
-        this.simplifiedIngredientsList = Object.values(
-          this.finalIngredients
-        ).map((val) => {
-          return `${val.amount} ${val.unit} ${val.name}`;
-        });
+        /**
+         * applies filter to an array made up the ingredients dictionary
+         */
+        this.simplifiedIngredientsList = this.applyFiltersToIngredientNames(
+          Object.values(this.finalIngredients).map((val) => {
+            return `${val.name} - ${val.amount} ${val.unit}`;
+          })
+        );
       },
       error: (err) => {
         // TODO: put toaster up
@@ -467,14 +470,35 @@ export class PaletteComponent implements OnInit {
   }
 
   giveMeSimpleIngredientList(ingredients: Ingredient[]): string {
-    const ingredientNames = ingredients.map((val: Ingredient): string => {
+    let ingredientNames = ingredients.map((val: Ingredient): string => {
       return val.name;
     });
 
-    const notWaterIngredients = ingredientNames.filter(
+    ingredientNames = this.applyFiltersToIngredientNames(ingredientNames);
+
+    return ingredientNames.join(', ');
+  }
+
+  applyFiltersToIngredientNames(ingredientNames: string[]): string[] {
+    ingredientNames = ingredientNames.filter(
       (word) => !word.startsWith('Water')
     );
 
-    return notWaterIngredients.join(', ');
+    // remove starting with Salt
+    ingredientNames = ingredientNames.filter(
+      (word) => !word.startsWith('Salt')
+    );
+
+    // remove starting with Sugar
+    ingredientNames = ingredientNames.filter(
+      (word) => !word.startsWith('Sugar')
+    );
+
+    // remove olive oil
+    ingredientNames = ingredientNames.filter(
+      (word) => !word.startsWith('Olive Oil')
+    );
+
+    return ingredientNames;
   }
 }
