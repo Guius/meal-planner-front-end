@@ -5,13 +5,18 @@
   height: 100vh;
   /* overflow-y: hidden; */
   padding: 50px;
+  gap: 15px;
 }
 
 ion-card {
+  box-sizing: border-box;
   height: 100%;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 2fr 10fr 1fr;
 }
 
 ion-card-content {
-  height: 87%;
   overflow-y: scroll;
 }
