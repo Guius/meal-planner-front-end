@@ -587,7 +587,7 @@ export class PaletteService {
   constructor(private http: HttpClient) {}
 
   getRandomRecipes(numberOfRecipes: number): Observable<RandomRecipeDto[]> {
-    return of(fakePalette);
+    // return of(fakePalette);
 
     return this.http.get<RandomRecipeDto[]>(
       `${environment.mealPlannerUrl}/meal-planner/random-recipes/${numberOfRecipes}`

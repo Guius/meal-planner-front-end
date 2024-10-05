@@ -41,3 +41,8 @@ export interface RandomRecipeDto {
   recipeYield: number;
   totalTime: string;
 }
+
+export interface RecipeOfPalette {
+  recipe: RandomRecipeDto;
+  locked: boolean;
+}

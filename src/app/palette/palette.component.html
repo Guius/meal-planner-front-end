@@ -12,17 +12,19 @@
             *ngFor="let item of this.recipes; index as i"
           >
             <ion-label>
-              <strong>{{ this.prettifyRecipeName(item.name) }}</strong
+              <strong>{{ this.prettifyRecipeName(item.recipe.name) }}</strong
               ><br />
-              <ion-text>{{ item.recipeCuisine }}</ion-text
+              <ion-text>{{ item.recipe.recipeCuisine }}</ion-text
               ><br />
               <ion-note color="medium" class="ion-text-wrap">
-                {{ this.giveMeSimpleIngredientList(item.recipeIngredient) }}
+                {{
+                  this.giveMeSimpleIngredientList(item.recipe.recipeIngredient)
+                }}
               </ion-note>
             </ion-label>
             <div class="metadata-end-wrapper" slot="end">
               <ion-note color="medium">{{
-                this.prettifyPrepTime(item.totalTime)
+                this.prettifyPrepTime(item.recipe.totalTime)
               }}</ion-note>
               <ion-icon color="medium" name="chevron-forward"></ion-icon>
             </div>
@@ -31,17 +33,13 @@
       </ion-card-content>
 
       <div>
-        <ion-button fill="clear">Action 1</ion-button>
-        <ion-button fill="clear">Action 2</ion-button>
+        <ion-button fill="clear" (click)="refresh()">Refresh</ion-button>
       </div>
     </ion-card>
     <ion-card class="cart">
       <ion-card-header>
         <ion-card-title>Cart</ion-card-title>
-        <ion-card-subtitle
-          >Below is the shopping list to make the recipes
-          selected</ion-card-subtitle
-        >
+        <ion-card-subtitle>Shopping list to make the recipes</ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
         <ion-list>

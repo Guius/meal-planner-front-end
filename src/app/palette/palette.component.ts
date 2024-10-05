@@ -1,6 +1,11 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { PaletteService } from './palette.service';
-import { Diet, Ingredient, RandomRecipeDto } from './random-recipe.dto';
+import {
+  Diet,
+  Ingredient,
+  RandomRecipeDto,
+  RecipeOfPalette,
+} from './random-recipe.dto';
 import { LoggerModule, NGXLogger } from 'ngx-logger';
 import { HttpClientModule } from '@angular/common/http';
 import {
@@ -65,14 +70,13 @@ export interface IngredientInformation {
   ],
 })
 export class PaletteComponent implements OnInit {
-  recipes: RandomRecipeDto[] = [];
+  recipes: RecipeOfPalette[] = [];
 
   simplifiedIngredientsList: string[] = [];
 
   finalIngredients: Record<string, IngredientInformation> = {};
 
   paletteItemsNumber: number = 5;
-  indexesOfItemsToKeep: number[] = [0];
 
   constructor(private service: PaletteService) {
     console.log('hello');
@@ -82,22 +86,20 @@ export class PaletteComponent implements OnInit {
     this.getRandomRecipes(this.paletteItemsNumber);
   }
 
+  refresh() {
+    this.getRandomRecipes(this.paletteItemsNumber);
+  }
+
   getRandomRecipes(numberOfRecipes: number) {
     this.service.getRandomRecipes(numberOfRecipes).subscribe({
       next: (data) => {
         console.info(data);
-        for (
-          let randomRecipeNumber = 0;
-          randomRecipeNumber < data.length;
-          randomRecipeNumber++
-        ) {
-          if (this.indexesOfItemsToKeep.includes(randomRecipeNumber)) {
-            continue;
-          } else {
-            this.recipes[randomRecipeNumber] = data[randomRecipeNumber];
-          }
-        }
-        this.recipes = data;
+        this.recipes = data.map((val) => {
+          return {
+            recipe: val,
+            locked: false,
+          };
+        });
 
         // get the final ingredients list
         /**
@@ -110,7 +112,7 @@ export class PaletteComponent implements OnInit {
           recipeNumber++
         ) {
           const recipe = this.recipes[recipeNumber];
-          const ingredients = recipe.recipeIngredient;
+          const ingredients = recipe.recipe.recipeIngredient;
 
           for (let i = 0; i < ingredients.length; i++) {
             const ingredient = ingredients[i];
