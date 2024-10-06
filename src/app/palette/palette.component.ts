@@ -1,4 +1,12 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  OnInit,
+  ViewChild,
+  QueryList,
+  AfterViewInit,
+  ViewChildren,
+} from '@angular/core';
 import { PaletteService } from './palette.service';
 import {
   Diet,
@@ -25,6 +33,10 @@ import {
   IonText,
   IonInput,
   IonButton,
+  IonItemSliding,
+  IonAvatar,
+  IonItemOptions,
+  IonItemOption,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 
@@ -49,6 +61,10 @@ export interface IngredientInformation {
   standalone: true,
   providers: [PaletteService],
   imports: [
+    IonItemOption,
+    IonItemOptions,
+    IonAvatar,
+    IonItemSliding,
     IonButton,
     IonInput,
     IonText,
@@ -69,7 +85,9 @@ export interface IngredientInformation {
     CommonModule,
   ],
 })
-export class PaletteComponent implements OnInit {
+export class PaletteComponent implements OnInit, AfterViewInit {
+  @ViewChildren('slidingItem') slidingItems!: QueryList<IonItemSliding>;
+
   recipes: RecipeOfPalette[] = [];
 
   simplifiedIngredientsList: string[] = [];
@@ -78,30 +96,67 @@ export class PaletteComponent implements OnInit {
 
   paletteItemsNumber: number = 5;
 
-  constructor(private service: PaletteService) {
-    console.log('hello');
-  }
+  constructor(private service: PaletteService) {}
 
   ngOnInit() {
     this.getRandomRecipes(this.paletteItemsNumber);
   }
 
+  ngAfterViewInit() {
+    console.log(this.slidingItems);
+    // Now the slidingItems list is initialized, and we can safely use it
+  }
+
   refresh() {
-    this.getRandomRecipes(this.paletteItemsNumber);
+    let numberOfItemsLocked = 0;
+    for (let i = 0; i < this.recipes.length; i++) {
+      if (this.recipes[i].locked) numberOfItemsLocked++;
+    }
+    this.getRandomRecipes(this.paletteItemsNumber - numberOfItemsLocked);
+  }
+
+  lockItem(itemIndex: number) {
+    if (this.recipes[itemIndex]) {
+      this.recipes[itemIndex].locked
+        ? (this.recipes[itemIndex].locked = false)
+        : (this.recipes[itemIndex].locked = true);
+      console.log(this.slidingItems);
+      const slidingItemsArray = this.slidingItems.toArray(); // Now it's safe to use this
+
+      if (slidingItemsArray[itemIndex]) {
+        slidingItemsArray[itemIndex].close(); // Close the sliding item at the specified index
+      } else {
+        console.error('Sliding item at the specified index not found.');
+      }
+    }
   }
 
   getRandomRecipes(numberOfRecipes: number) {
+    console.log(`getting ${numberOfRecipes} recipes from back end`);
     this.service.getRandomRecipes(numberOfRecipes).subscribe({
       next: (data) => {
         console.info(data);
-        this.recipes = data.map((val) => {
-          return {
-            recipe: val,
-            locked: false,
-          };
-        });
+        if (this.recipes.length === 0) {
+          this.recipes = data.map((val) => {
+            return {
+              recipe: val,
+              locked: false,
+            };
+          });
+        } else {
+          // loop through current recipes of palette
+          for (let i = 0; i < this.recipes.length; i++) {
+            // if recipe of palette is locked then skip it
+            if (this.recipes[i].locked) continue;
+            // if recipe of palette is not locked, override it with recipe from back end
+            const lastRecipeOfBackEnd = data.pop();
+            if (!lastRecipeOfBackEnd) break;
+            this.recipes[i] = { recipe: lastRecipeOfBackEnd, locked: false };
+          }
+        }
 
         // get the final ingredients list
+        this.finalIngredients = {};
         /**
          * First create an object whose keys is every ingredient id.
          * If that key already exists, then add the amounts together
