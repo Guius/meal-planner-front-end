@@ -44,6 +44,78 @@
 
       <div>
         <ion-button fill="clear" (click)="refresh()">Refresh</ion-button>
+        <ion-button fill="clear" id="open-modal">Options</ion-button>
+        <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+          <ng-template>
+            <ion-header>
+              <ion-toolbar>
+                <ion-buttons slot="start">
+                  <ion-button (click)="cancel()">Cancel</ion-button>
+                </ion-buttons>
+                <ion-title>Options</ion-title>
+                <ion-buttons slot="end">
+                  <ion-button (click)="confirm()" [strong]="true"
+                    >Confirm</ion-button
+                  >
+                </ion-buttons>
+              </ion-toolbar>
+            </ion-header>
+            <ion-content class="ion-padding">
+              <ion-chip color="warning">
+                <ion-icon name="warning-outline"></ion-icon>
+                <ion-label
+                  >Changing these options will cause your current selection of
+                  recipes to be removed</ion-label
+                >
+                <ion-icon name="close"></ion-icon>
+              </ion-chip>
+              <br />
+              <br />
+              <form #optionsForm="ngForm">
+                <ion-item>
+                  <div class="form-group">
+                    <ion-input
+                      type="number"
+                      labelPlacement="stacked"
+                      [(ngModel)]="paletteItemsNumber"
+                      class="form-control"
+                      id="numberOfRecipes"
+                      name="numberOfRecipes"
+                      #numberOfRecipes="ngModel"
+                      required
+                      min="0"
+                      max="20"
+                      ><div slot="label">
+                        Number of recipes
+                        <ion-text
+                          color="danger"
+                          [hidden]="
+                            numberOfRecipes.valid || numberOfRecipes.pristine
+                          "
+                          *ngIf="
+                            numberOfRecipes.errors &&
+                            numberOfRecipes.errors['required']
+                          "
+                          >(Required)</ion-text
+                        >
+                        <ion-text
+                          color="danger"
+                          *ngIf="this.paletteItemsNumber > this.maxNumber"
+                          >(Max {{ this.maxNumber }})</ion-text
+                        >
+                        <ion-text
+                          color="danger"
+                          *ngIf="this.paletteItemsNumber < this.minNumber"
+                          >(Min {{ this.minNumber }})</ion-text
+                        >
+                      </div></ion-input
+                    >
+                  </div>
+                </ion-item>
+              </form>
+            </ion-content>
+          </ng-template>
+        </ion-modal>
       </div>
     </ion-card>
     <ion-card class="cart">

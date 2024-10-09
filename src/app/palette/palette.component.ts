@@ -7,6 +7,7 @@ import {
   AfterViewInit,
   ViewChildren,
 } from '@angular/core';
+import { chevronForward, warningOutline, close } from 'ionicons/icons';
 import { PaletteService } from './palette.service';
 import {
   Diet,
@@ -37,9 +38,18 @@ import {
   IonAvatar,
   IonItemOptions,
   IonItemOption,
+  IonAlert,
+  IonModal,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonTitle,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { ToastController } from '@ionic/angular';
+import { OverlayEventDetail } from '@ionic/core/components';
+import { FormsModule, NgForm } from '@angular/forms';
+import { addIcons } from 'ionicons';
 
 export enum LengthGauge {
   Short = 'Short',
@@ -62,6 +72,12 @@ export interface IngredientInformation {
   standalone: true,
   providers: [PaletteService],
   imports: [
+    IonTitle,
+    IonButtons,
+    IonToolbar,
+    IonHeader,
+    IonModal,
+    IonAlert,
     IonItemOption,
     IonItemOptions,
     IonAvatar,
@@ -84,10 +100,18 @@ export interface IngredientInformation {
     IonCard,
     HttpClientModule,
     CommonModule,
+    FormsModule,
   ],
 })
 export class PaletteComponent implements OnInit, AfterViewInit {
   @ViewChildren('slidingItem') slidingItems!: QueryList<IonItemSliding>;
+
+  // modal
+  @ViewChild(IonModal) modal!: IonModal;
+  message =
+    'This modal example uses triggers to automatically open a modal when the button is clicked.';
+  name: string = '';
+  @ViewChild(NgForm) optionsForm!: NgForm;
 
   recipes: RecipeOfPalette[] = [];
 
@@ -96,11 +120,17 @@ export class PaletteComponent implements OnInit, AfterViewInit {
   finalIngredients: Record<string, IngredientInformation> = {};
 
   paletteItemsNumber: number = 5;
+  maxNumber: number = 10;
+  minNumber: number = 1;
+
+  alertButtons = ['Action'];
 
   constructor(
     private service: PaletteService,
     private toastController: ToastController
-  ) {}
+  ) {
+    addIcons({ warningOutline, chevronForward, close });
+  }
 
   ngOnInit() {
     this.getRandomRecipes(this.paletteItemsNumber);
@@ -169,7 +199,9 @@ export class PaletteComponent implements OnInit, AfterViewInit {
             if (this.recipes[i].locked) continue;
             // if recipe of palette is not locked, override it with recipe from back end
             const lastRecipeOfBackEnd = data.pop();
-            if (!lastRecipeOfBackEnd) break;
+            if (!lastRecipeOfBackEnd) {
+              break;
+            }
             this.recipes[i] = { recipe: lastRecipeOfBackEnd, locked: false };
           }
         }
@@ -287,5 +319,37 @@ export class PaletteComponent implements OnInit, AfterViewInit {
     );
 
     return ingredientNames;
+  }
+
+  // MODAL
+  submitted = false;
+  cancel() {
+    this.modal.dismiss(null, 'cancel');
+  }
+
+  confirm() {
+    this.submitted = true;
+
+    let personalValid = true;
+
+    if (
+      this.paletteItemsNumber > this.maxNumber ||
+      this.paletteItemsNumber < this.minNumber
+    ) {
+      personalValid = false;
+    }
+
+    if (this.optionsForm.valid && personalValid) {
+      this.modal.dismiss(this.name, 'confirm');
+      this.recipes = [];
+      this.getRandomRecipes(this.paletteItemsNumber);
+    }
+  }
+
+  onWillDismiss(event: Event) {
+    const ev = event as CustomEvent<OverlayEventDetail<string>>;
+    if (ev.detail.role === 'confirm') {
+      this.message = `Hello, ${ev.detail.data}!`;
+    }
   }
 }
