@@ -39,6 +39,7 @@ import {
   IonItemOption,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
+import { ToastController } from '@ionic/angular';
 
 export enum LengthGauge {
   Short = 'Short',
@@ -96,7 +97,10 @@ export class PaletteComponent implements OnInit, AfterViewInit {
 
   paletteItemsNumber: number = 5;
 
-  constructor(private service: PaletteService) {}
+  constructor(
+    private service: PaletteService,
+    private toastController: ToastController
+  ) {}
 
   ngOnInit() {
     this.getRandomRecipes(this.paletteItemsNumber);
@@ -112,7 +116,22 @@ export class PaletteComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < this.recipes.length; i++) {
       if (this.recipes[i].locked) numberOfItemsLocked++;
     }
+    // TODO: if all recipes have been locked show a message telling user we are not getting anything from back end
+    if (this.paletteItemsNumber - numberOfItemsLocked === 0) {
+      this.presentToast('bottom', 'You have locked all recipes');
+    }
     this.getRandomRecipes(this.paletteItemsNumber - numberOfItemsLocked);
+  }
+
+  async presentToast(position: 'top' | 'middle' | 'bottom', message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 1500,
+      position: position,
+      color: 'warning',
+    });
+
+    await toast.present();
   }
 
   lockItem(itemIndex: number) {
