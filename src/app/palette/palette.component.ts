@@ -136,12 +136,12 @@ export class PaletteComponent implements OnInit, AfterViewInit {
     this.getRandomRecipes(this.paletteItemsNumber);
   }
 
-  downloadPdf(): void {
+  async downloadPdf(): Promise<void> {
     let recipes: RandomRecipeDto[] = [];
     for (let i = 0; i < this.recipes.length; i++) {
       recipes.push(this.recipes[i].recipe);
     }
-    this.pdfService.generatePdf(this.simplifiedIngredientsList, recipes);
+    await this.pdfService.generatePdf(this.simplifiedIngredientsList, recipes);
   }
 
   ngAfterViewInit() {
