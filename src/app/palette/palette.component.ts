@@ -50,6 +50,7 @@ import { ToastController } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { FormsModule, NgForm } from '@angular/forms';
 import { addIcons } from 'ionicons';
+import { PdfService } from './pdf.service';
 
 export enum LengthGauge {
   Short = 'Short',
@@ -70,17 +71,15 @@ export interface IngredientInformation {
   styleUrl: 'palette.component.css',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  providers: [PaletteService],
+  providers: [PaletteService, PdfService],
   imports: [
     IonTitle,
     IonButtons,
     IonToolbar,
     IonHeader,
     IonModal,
-    IonAlert,
     IonItemOption,
     IonItemOptions,
-    IonAvatar,
     IonItemSliding,
     IonButton,
     IonInput,
@@ -127,13 +126,22 @@ export class PaletteComponent implements OnInit, AfterViewInit {
 
   constructor(
     private service: PaletteService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private pdfService: PdfService
   ) {
     addIcons({ warningOutline, chevronForward, close });
   }
 
   ngOnInit() {
     this.getRandomRecipes(this.paletteItemsNumber);
+  }
+
+  downloadPdf(): void {
+    let recipes: RandomRecipeDto[] = [];
+    for (let i = 0; i < this.recipes.length; i++) {
+      recipes.push(this.recipes[i].recipe);
+    }
+    this.pdfService.generatePdf(this.simplifiedIngredientsList, recipes);
   }
 
   ngAfterViewInit() {
