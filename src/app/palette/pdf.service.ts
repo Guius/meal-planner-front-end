@@ -26,35 +26,18 @@ export class PdfService {
     pdf.setFont('Knewave-Regular');
 
     // First page: Meal Plan
-    pdf.setFontSize(24); // Large title font size
-    pdf.text('Meal Plan', 10, 20); // Title at (x:10, y:20)
+    // Set background color for the page
+    pdf.setFillColor(230, 240, 230); // Light green
+    pdf.rect(0, 0, 210, 297, 'F'); // A4 Page size (210mm x 297mm)
 
-    pdf.setFontSize(16); // Subtitle font size
-    pdf.text('List of Meals', 10, 40); // Subtitle at (x:10, y:40)
+    // Draw rounded rectangle for the title
+    pdf.setFillColor(160, 220, 200); // Title background color
+    pdf.roundedRect(10, 10, 190, 30, 5, 5, 'F'); // x, y, width, height, radius
 
-    // Example list of meals
-    let meals: string[] = [];
-    for (let i = 0; i < recipes.length; i++) {
-      meals.push(recipes[i].name);
-    }
-
-    pdf.setFontSize(12); // Regular content font size
-    meals.forEach((meal, index) => {
-      pdf.text(`${index + 1}. ${meal}`, 10, 50 + index * 10); // Dynamic positioning
-    });
-
-    // Add second page
-    pdf.addPage();
-
-    // Second page: Ingredients List
-    pdf.setFontSize(20); // Medium title font size
-    pdf.text('Ingredients List', 10, 20); // Title at (x:10, y:20)
-
-    // Example list of ingredients
-    pdf.setFontSize(12); // Regular content font size
-    simplifiedIngredientsList.forEach((ingredient, index) => {
-      pdf.text(`${index + 1}. ${ingredient}`, 10, 30 + index * 10); // Dynamic positioning
-    });
+    // Add the title text
+    pdf.setFontSize(24); // Large font size
+    pdf.setTextColor(40, 40, 40); // Dark gray text color
+    pdf.text('Meal plan', 20, 30); // Add text with some padding
 
     // Save the PDF
     pdf.save('Meal_Plan.pdf');
