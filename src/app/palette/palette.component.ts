@@ -45,6 +45,7 @@ import {
   IonButtons,
   IonTitle,
   IonSpinner,
+  IonSkeletonText,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { ToastController } from '@ionic/angular';
@@ -100,6 +101,7 @@ export interface IngredientInformation {
     IonCardSubtitle,
     IonCard,
     IonSpinner,
+    IonSkeletonText,
     HttpClientModule,
     CommonModule,
     FormsModule,
@@ -127,6 +129,8 @@ export class PaletteComponent implements OnInit, AfterViewInit {
   minNumber: number = 1;
 
   isSendingEmail = false;
+  recipesLoaded = false;
+  errorLoadingRecipes = false;
 
   alertButtons = ['Action'];
 
@@ -270,9 +274,19 @@ export class PaletteComponent implements OnInit, AfterViewInit {
             return `${val.name} - ${val.amount} ${val.unit}`;
           })
         );
+
+        this.recipesLoaded = true;
       },
-      error: (err) => {
-        // TODO: put toaster up
+      error: async (err) => {
+        const toast = await this.toastController.create({
+          message: 'Error loading recipes',
+          duration: 1500,
+          position: 'bottom',
+          color: 'danger',
+        });
+
+        await toast.present();
+        this.recipesLoaded = true;
       },
     });
   }
