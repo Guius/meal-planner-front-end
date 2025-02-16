@@ -112,6 +112,7 @@ export class PaletteComponent implements OnInit, AfterViewInit {
   name: string = '';
   @ViewChild(NgForm) optionsForm!: NgForm;
 
+  rawRecipes: RandomRecipeDto[] = [];
   recipes: RecipeOfPalette[] = [];
 
   simplifiedIngredientsList: string[] = [];
@@ -193,6 +194,7 @@ export class PaletteComponent implements OnInit, AfterViewInit {
     this.service.getRandomRecipes(numberOfRecipes).subscribe({
       next: (data) => {
         console.info(data);
+        this.rawRecipes = data;
         if (this.recipes.length === 0) {
           this.recipes = data.map((val) => {
             return {
@@ -266,6 +268,42 @@ export class PaletteComponent implements OnInit, AfterViewInit {
       },
       error: (err) => {
         // TODO: put toaster up
+      },
+    });
+  }
+
+  async sendRecipesByEmail() {
+    if (this.rawRecipes.length === 0) {
+      const toast = await this.toastController.create({
+        message: 'No recipes to send!',
+        duration: 1500,
+        position: 'bottom',
+        color: 'danger',
+      });
+
+      await toast.present();
+    }
+
+    this.service.sendRecipesToEmail(this.rawRecipes).subscribe({
+      next: async () => {
+        const toast = await this.toastController.create({
+          message: 'Email sent!',
+          duration: 1500,
+          position: 'bottom',
+          color: 'primary',
+        });
+
+        await toast.present();
+      },
+      error: async () => {
+        const toast = await this.toastController.create({
+          message: 'Email could not be sent!',
+          duration: 1500,
+          position: 'bottom',
+          color: 'danger',
+        });
+
+        await toast.present();
       },
     });
   }

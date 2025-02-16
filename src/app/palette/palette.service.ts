@@ -593,4 +593,11 @@ export class PaletteService {
       `${environment.mealPlannerUrl}/meal-planner/random-recipes/${numberOfRecipes}`
     );
   }
+
+  sendRecipesToEmail(selectedRecipes: RandomRecipeDto[]) {
+    return this.http.post(
+      `${environment.mealPlannerUrl}/meal-planner/send-recipes-in-email`,
+      selectedRecipes
+    );
+  }
 }
