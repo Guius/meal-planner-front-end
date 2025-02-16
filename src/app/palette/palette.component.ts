@@ -44,6 +44,7 @@ import {
   IonToolbar,
   IonButtons,
   IonTitle,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { ToastController } from '@ionic/angular';
@@ -73,6 +74,7 @@ export interface IngredientInformation {
   standalone: true,
   providers: [PaletteService, PdfService],
   imports: [
+    IonSpinner,
     IonTitle,
     IonButtons,
     IonToolbar,
@@ -97,6 +99,7 @@ export interface IngredientInformation {
     IonCardContent,
     IonCardSubtitle,
     IonCard,
+    IonSpinner,
     HttpClientModule,
     CommonModule,
     FormsModule,
@@ -122,6 +125,8 @@ export class PaletteComponent implements OnInit, AfterViewInit {
   paletteItemsNumber: number = 5;
   maxNumber: number = 10;
   minNumber: number = 1;
+
+  isSendingEmail = false;
 
   alertButtons = ['Action'];
 
@@ -273,6 +278,7 @@ export class PaletteComponent implements OnInit, AfterViewInit {
   }
 
   async sendRecipesByEmail() {
+    this.isSendingEmail = true;
     if (this.rawRecipes.length === 0) {
       const toast = await this.toastController.create({
         message: 'No recipes to send!',
@@ -293,6 +299,7 @@ export class PaletteComponent implements OnInit, AfterViewInit {
           color: 'primary',
         });
 
+        this.isSendingEmail = false;
         await toast.present();
       },
       error: async () => {
@@ -303,6 +310,7 @@ export class PaletteComponent implements OnInit, AfterViewInit {
           color: 'danger',
         });
 
+        this.isSendingEmail = false;
         await toast.present();
       },
     });
