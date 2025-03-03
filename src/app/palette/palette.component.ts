@@ -304,30 +304,32 @@ export class PaletteComponent implements OnInit, AfterViewInit {
       await toast.present();
     }
 
-    this.service.sendRecipesToEmail(this.rawRecipes).subscribe({
-      next: async () => {
-        const toast = await this.toastController.create({
-          message: 'Email sent!',
-          duration: 1500,
-          position: 'bottom',
-          color: 'primary',
-        });
+    this.service
+      .sendRecipesToEmail(this.rawRecipes, this.simplifiedIngredientsList)
+      .subscribe({
+        next: async () => {
+          const toast = await this.toastController.create({
+            message: 'Email sent!',
+            duration: 1500,
+            position: 'bottom',
+            color: 'primary',
+          });
 
-        this.isSendingEmail = false;
-        await toast.present();
-      },
-      error: async () => {
-        const toast = await this.toastController.create({
-          message: 'Email could not be sent!',
-          duration: 1500,
-          position: 'bottom',
-          color: 'danger',
-        });
+          this.isSendingEmail = false;
+          await toast.present();
+        },
+        error: async () => {
+          const toast = await this.toastController.create({
+            message: 'Email could not be sent!',
+            duration: 1500,
+            position: 'bottom',
+            color: 'danger',
+          });
 
-        this.isSendingEmail = false;
-        await toast.present();
-      },
-    });
+          this.isSendingEmail = false;
+          await toast.present();
+        },
+      });
   }
 
   prettifyRecipeName(name: string): string {

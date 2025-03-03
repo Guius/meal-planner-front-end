@@ -594,10 +594,13 @@ export class PaletteService {
     );
   }
 
-  sendRecipesToEmail(selectedRecipes: RandomRecipeDto[]) {
+  sendRecipesToEmail(
+    selectedRecipes: RandomRecipeDto[],
+    ingredientsList: string[]
+  ) {
     return this.http.post(
       `${environment.mealPlannerUrl}/meal-planner/send-recipes-in-email`,
-      selectedRecipes
+      { randomRecipes: selectedRecipes, ingredientsList: ingredientsList }
     );
   }
 }
