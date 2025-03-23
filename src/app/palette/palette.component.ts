@@ -19,26 +19,12 @@ import { LoggerModule, NGXLogger } from 'ngx-logger';
 import { HttpClientModule } from '@angular/common/http';
 import {
   IonCard,
-  IonCardSubtitle,
   IonCardContent,
   IonCardTitle,
   IonCardHeader,
   IonContent,
-  IonChip,
-  IonCheckbox,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonIcon,
-  IonNote,
-  IonText,
-  IonInput,
   IonButton,
   IonItemSliding,
-  IonAvatar,
-  IonItemOptions,
-  IonItemOption,
-  IonAlert,
   IonModal,
   IonHeader,
   IonToolbar,
@@ -80,25 +66,11 @@ export interface IngredientInformation {
     IonButtons,
     IonToolbar,
     IonHeader,
-    IonModal,
-    IonItemOption,
-    IonItemOptions,
-    IonItemSliding,
     IonButton,
-    IonInput,
-    IonText,
-    IonNote,
-    IonIcon,
-    IonLabel,
-    IonItem,
-    IonList,
-    IonCheckbox,
-    IonChip,
     IonContent,
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
-    IonCardSubtitle,
     IonCard,
     IonSpinner,
     IonSkeletonText,
@@ -203,8 +175,8 @@ export class PaletteComponent implements OnInit, AfterViewInit {
     this.service.getRandomRecipes(numberOfRecipes).subscribe({
       next: (data) => {
         console.info(data);
-        this.rawRecipes = data;
         if (this.recipes.length === 0) {
+          this.rawRecipes = data;
           this.recipes = data.map((val) => {
             return {
               recipe: val,
@@ -222,6 +194,7 @@ export class PaletteComponent implements OnInit, AfterViewInit {
               break;
             }
             this.recipes[i] = { recipe: lastRecipeOfBackEnd, locked: false };
+            this.rawRecipes[i] = lastRecipeOfBackEnd;
           }
         }
 
