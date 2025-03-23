@@ -77,6 +77,15 @@ ion-title {
   font-style: normal;
 }
 
+.kalam {
+  font-family: "Kalam", cursive;
+  font-style: normal;
+}
+
+.ingredients-list {
+  font-size: medium !important;
+}
+
 ion-button {
   --background: #fdf4f3;
   --background-hover: #9ce0be;
