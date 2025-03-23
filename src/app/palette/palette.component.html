@@ -26,13 +26,18 @@
   </ion-header>
   <div class="container">
     @if (recipesLoaded) {
-    <ion-card *ngFor="let recipe of recipes">
+    <ion-card
+      *ngFor="let recipe of recipes; let i = index"
+      (click)="this.lockItem(i)"
+    >
       <ion-card-header
         [ngClass]="recipe.recipe.diet === 'Non-Meat' ? 'veggie' : 'meatie'"
       >
-        <ion-card-title class="ubuntu-sans-mono">{{
-          this.prettifyRecipeName(recipe.recipe.name)
-        }}</ion-card-title>
+        <ion-card-title
+          class="ubuntu-sans-mono"
+          [ngClass]="recipe.locked ? 'locked' : ''"
+          >{{ this.prettifyRecipeName(recipe.recipe.name) }}</ion-card-title
+        >
       </ion-card-header>
 
       <ion-card-content class="kalam ingredients-list">

@@ -148,7 +148,7 @@ export class PaletteComponent implements OnInit, AfterViewInit {
       message: message,
       duration: 1500,
       position: position,
-      color: 'warning',
+      cssClass: 'warning-toast',
     });
 
     await toast.present();
@@ -255,7 +255,7 @@ export class PaletteComponent implements OnInit, AfterViewInit {
           message: 'Error loading recipes',
           duration: 1500,
           position: 'bottom',
-          color: 'danger',
+          cssClass: 'error-toast',
         });
 
         await toast.present();
