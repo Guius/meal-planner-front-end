@@ -312,7 +312,7 @@ export class PaletteComponent implements OnInit, AfterViewInit {
             message: 'Email sent!',
             duration: 1500,
             position: 'bottom',
-            color: 'primary',
+            cssClass: 'success-toast',
           });
 
           this.isSendingEmail = false;
