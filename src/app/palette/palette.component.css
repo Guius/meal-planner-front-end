@@ -145,6 +145,7 @@ ion-card-header {
 
 ion-card-content {
   padding-top: 20px !important;
+  font-size: small !important;
 }
 
 ion-toast.success-toast {
