@@ -41,7 +41,13 @@
       </ion-card-header>
 
       <ion-card-content class="kalam ingredients-list">
-        {{ this.giveMeSimpleIngredientList(recipe.recipe.recipeIngredient) }}
+        <p class="ubuntu-sans-mono">
+          {{ this.prettifyPrepTime(recipe.recipe.totalTime) | uppercase }}
+        </p>
+        <br />
+        <div>
+          {{ this.giveMeSimpleIngredientList(recipe.recipe.recipeIngredient) }}
+        </div>
       </ion-card-content>
     </ion-card>
     } @else {
