@@ -136,19 +136,22 @@ export class PaletteComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < this.recipes.length; i++) {
       if (this.recipes[i].locked) numberOfItemsLocked++;
     }
-    // TODO: if all recipes have been locked show a message telling user we are not getting anything from back end
     if (this.paletteItemsNumber - numberOfItemsLocked === 0) {
-      this.presentToast('bottom', 'You have locked all recipes');
+      this.presentToast('bottom', 'You have locked all recipes', 'warning');
     }
     this.getRandomRecipes(this.paletteItemsNumber - numberOfItemsLocked);
   }
 
-  async presentToast(position: 'top' | 'middle' | 'bottom', message: string) {
+  async presentToast(
+    position: 'top' | 'middle' | 'bottom',
+    message: string,
+    level: 'success' | 'warning' | 'error'
+  ) {
     const toast = await this.toastController.create({
       message: message,
       duration: 1500,
       position: position,
-      cssClass: 'warning-toast',
+      cssClass: `${level}-toast custom-toast ubuntu-sans-mono`,
     });
 
     await toast.present();
@@ -251,14 +254,7 @@ export class PaletteComponent implements OnInit, AfterViewInit {
         this.recipesLoaded = true;
       },
       error: async (err) => {
-        const toast = await this.toastController.create({
-          message: 'Error loading recipes',
-          duration: 1500,
-          position: 'bottom',
-          cssClass: 'error-toast',
-        });
-
-        await toast.present();
+        await this.presentToast('bottom', 'Error loading recipes', 'error');
         this.recipesLoaded = true;
       },
     });
@@ -267,40 +263,24 @@ export class PaletteComponent implements OnInit, AfterViewInit {
   async sendRecipesByEmail() {
     this.isSendingEmail = true;
     if (this.rawRecipes.length === 0) {
-      const toast = await this.toastController.create({
-        message: 'No recipes to send!',
-        duration: 1500,
-        position: 'bottom',
-        color: 'danger',
-      });
-
-      await toast.present();
+      await this.presentToast('bottom', 'No recipes to send!', 'warning');
     }
 
     this.service
       .sendRecipesToEmail(this.rawRecipes, this.simplifiedIngredientsList)
       .subscribe({
         next: async () => {
-          const toast = await this.toastController.create({
-            message: 'Email sent!',
-            duration: 1500,
-            position: 'bottom',
-            cssClass: 'success-toast',
-          });
-
+          await this.presentToast('bottom', 'Email sent!', 'success');
           this.isSendingEmail = false;
-          await toast.present();
         },
         error: async () => {
-          const toast = await this.toastController.create({
-            message: 'Email could not be sent!',
-            duration: 1500,
-            position: 'bottom',
-            color: 'danger',
-          });
+          await this.presentToast(
+            'bottom',
+            'Email could not be sent!',
+            'error'
+          );
 
           this.isSendingEmail = false;
-          await toast.present();
         },
       });
   }

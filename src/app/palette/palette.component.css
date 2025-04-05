@@ -139,3 +139,12 @@ ion-toast.warning-toast {
 ion-toast.error-toast {
   --background: #cf7d52;
 }
+
+ion-toast.custom-toast {
+  --border-radius: 0px;
+}
+
+ion-toast.custom-toast::part(message) {
+  text-transform: uppercase;
+  text-align: center;
+}

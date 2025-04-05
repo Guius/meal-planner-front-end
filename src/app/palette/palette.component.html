@@ -18,7 +18,10 @@
           Send to email
         </ion-button>
         }
-        <ion-button class="toolbar-button ubuntu-sans-mono">
+        <ion-button
+          class="toolbar-button ubuntu-sans-mono"
+          (click)="presentToast('bottom', 'Test', 'success')"
+        >
           Options
         </ion-button>
       </ion-buttons>
