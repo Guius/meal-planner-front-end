@@ -11,6 +11,11 @@ export const routes: Routes = [
       import('./palette/palette.component').then((m) => m.PaletteComponent),
   },
   {
+    path: 'login',
+    loadComponent: () =>
+      import('./login/login.component').then((m) => m.LoginPageComponent),
+  },
+  {
     path: '',
     redirectTo: 'palette',
     pathMatch: 'full',

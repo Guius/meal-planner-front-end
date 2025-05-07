@@ -312,12 +312,16 @@ export class PaletteComponent implements OnInit, AfterViewInit {
   }
 
   giveMeSimpleIngredientList(ingredients: Ingredient[]): string {
+    console.log(ingredients);
     let ingredientNames = ingredients.map((val: Ingredient): string => {
       return val.name;
     });
 
+    console.log(ingredientNames.join(', '));
+
     ingredientNames = this.applyFiltersToIngredientNames(ingredientNames);
 
+    console.log(ingredientNames.join(', '));
     return ingredientNames.join(', ');
   }
 
