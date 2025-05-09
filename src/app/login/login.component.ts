@@ -32,6 +32,8 @@ import {
     IonContent,
     IonToolbar,
     IonTitle,
+    IonButtons,
+    IonButton,
   ],
   templateUrl: 'login.component.html',
   styleUrl: 'login.component.scss',
