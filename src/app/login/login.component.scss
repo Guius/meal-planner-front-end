@@ -7,7 +7,7 @@
   height: 100vh;
 }
 
-.left-content {
+.login-content {
   display: flex;
   justify-content: center; /* Centers horizontally */
   align-items: center; /* Centers vertically */
@@ -55,4 +55,22 @@ ion-button {
   --padding-bottom: 10px;
   --min-width: 50px !important;
   text-transform: uppercase;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  height: 30vh;
+  width: 40%;
+  justify-content: space-between;
+}
+
+.login-input {
+  display: block;
+  width: 100%;
+}
+
+.login-form-submit {
+  display: flex;
+  justify-content: end;
 }
