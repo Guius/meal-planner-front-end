@@ -15,6 +15,7 @@ import {
   IonTitle,
   IonSpinner,
   IonSkeletonText,
+  IonFooter,
 } from '@ionic/angular/standalone';
 import {
   ReactiveFormsModule,
@@ -33,6 +34,7 @@ import {
     IonToolbar,
     IonTitle,
     IonButtons,
+    IonFooter,
     IonButton,
   ],
   templateUrl: 'login.component.html',
