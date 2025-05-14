@@ -60,9 +60,17 @@ ion-button {
 .login-form {
   display: flex;
   flex-direction: column;
-  height: 30vh;
+  height: 40vh;
   width: 40%;
   justify-content: space-between;
+}
+
+.login-form-inputs {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-around;
+  max-height: 30%;
 }
 
 .login-input {
@@ -73,4 +81,11 @@ ion-button {
 .login-form-submit {
   display: flex;
   justify-content: end;
+}
+
+input {
+  background: none;
+  border: none;
+  border-bottom: 1px solid #d0d0d0;
+  line-height: 40px;
 }
