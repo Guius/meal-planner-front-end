@@ -23,7 +23,11 @@
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
-      <div class="login-content">
+      <form
+        [formGroup]="loginForm"
+        (ngSubmit)="onSubmit()"
+        class="login-content"
+      >
         <div class="login-form">
           <div class="login-form-title">
             <h1 class="ubuntu-sans-mono uppercase">Login</h1>
@@ -32,16 +36,52 @@
             <input
               placeholder="EMAIL"
               class="login-input ubuntu-sans-mono uppercase"
+              formControlName="email"
             />
-            <input placeholder="PASSWORD" class="login-input" />
+            <div
+              *ngIf="this.submitted && this.loginForm.controls['email'].errors"
+              class="form-input-box"
+            >
+              <p
+                *ngIf="this.loginForm.controls['email'].errors['email']"
+                class="form-input-error"
+              >
+                Not an email
+              </p>
+              <p
+                *ngIf="this.loginForm.controls['email'].errors['required']"
+                class="form-input-error"
+              >
+                Required
+              </p>
+            </div>
+
+            <input
+              placeholder="PASSWORD"
+              class="login-input"
+              formControlName="password"
+            />
+            <div
+              *ngIf="
+                this.submitted && this.loginForm.controls['password'].errors
+              "
+              class="form-input-box"
+            >
+              <p
+                *ngIf="this.loginForm.controls['password'].errors['required']"
+                class="form-input-error"
+              >
+                Required
+              </p>
+            </div>
           </div>
           <div class="login-form-submit">
-            <ion-button class="toolbar-button ubuntu-sans-mono"
+            <ion-button class="toolbar-button ubuntu-sans-mono" type="submit"
               >Login</ion-button
             >
           </div>
         </div>
-      </div>
+      </form>
     </div>
     <ion-footer>
       <ion-buttons>

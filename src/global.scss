@@ -61,3 +61,16 @@
 ion-button:hover {
   --background-hover: #f7aa8f !important;
 }
+
+.form-input-box {
+  text-align: end;
+}
+
+.form-input-error {
+  color: #f7aa8f;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-family: "Ubuntu Sans Mono", monospace;
+  font-optical-sizing: auto;
+  font-style: normal;
+}

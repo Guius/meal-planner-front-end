@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   mealPlannerUrl: 'http://localhost:3000',
+  userApi: 'http://localhost:8082',
 };
 
 /*

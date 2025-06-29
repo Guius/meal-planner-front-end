@@ -1,20 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  IonCard,
-  IonCardContent,
-  IonCardTitle,
-  IonCardHeader,
   IonContent,
   IonButton,
-  IonItemSliding,
-  IonModal,
-  IonHeader,
   IonToolbar,
   IonButtons,
   IonTitle,
-  IonSpinner,
-  IonSkeletonText,
   IonFooter,
 } from '@ionic/angular/standalone';
 import {
@@ -23,6 +14,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { AuthenticationService } from '../auth/service';
+import { provideHttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login-page',
@@ -42,15 +35,22 @@ import {
 })
 export class LoginPageComponent {
   loginForm: FormGroup;
+  submitted = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private _authenticationService: AuthenticationService
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required]],
     });
   }
 
   onSubmit() {
+    this.submitted = true;
+    console.log(this.loginForm.valid);
+    console.log(this.loginForm.controls);
     if (this.loginForm.valid) {
       console.log('Form Values:', this.loginForm.value);
     }
