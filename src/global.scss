@@ -74,3 +74,24 @@ ion-button:hover {
   font-optical-sizing: auto;
   font-style: normal;
 }
+
+ion-toast.success-toast {
+  --background: #bbb499;
+}
+
+ion-toast.warning-toast {
+  --background: #d2aa61;
+}
+
+ion-toast.error-toast {
+  --background: #cf7d52;
+}
+
+ion-toast.custom-toast {
+  --border-radius: 0px;
+}
+
+ion-toast.custom-toast::part(message) {
+  text-transform: uppercase;
+  text-align: center;
+}

@@ -15,7 +15,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthenticationService } from '../auth/service';
-import { provideHttpClient } from '@angular/common/http';
+import { ToastController } from '@ionic/angular';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -39,7 +41,9 @@ export class LoginPageComponent {
 
   constructor(
     private fb: FormBuilder,
-    private _authenticationService: AuthenticationService
+    private _authenticationService: AuthenticationService,
+    private toastController: ToastController,
+    private router: Router
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -52,7 +56,44 @@ export class LoginPageComponent {
     console.log(this.loginForm.valid);
     console.log(this.loginForm.controls);
     if (this.loginForm.valid) {
-      console.log('Form Values:', this.loginForm.value);
+      const email = this.loginForm.value.email;
+      const password = this.loginForm.value.password;
+      console.log(email, password);
+      this._authenticationService.login(email, password).subscribe({
+        next: () => {
+          this.presentToast('bottom', 'Logged in!', 'success');
+          return this.router.navigate(['/palette']);
+        },
+        error: (err) => {
+          if (err instanceof HttpErrorResponse) {
+            if (err.error.message === 'INVALIDCREDENTIALS') {
+              this.presentToast(
+                'bottom',
+                'Your email or password are wrong.',
+                'error'
+              );
+              return;
+            }
+          }
+          this.presentToast('bottom', 'Something went wrong', 'error');
+          return;
+        },
+      });
     }
+  }
+
+  async presentToast(
+    position: 'top' | 'middle' | 'bottom',
+    message: string,
+    level: 'success' | 'warning' | 'error'
+  ) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 1500,
+      position: position,
+      cssClass: `${level}-toast custom-toast ubuntu-sans-mono`,
+    });
+
+    await toast.present();
   }
 }
