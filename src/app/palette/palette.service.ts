@@ -590,7 +590,8 @@ export class PaletteService {
     // return of(fakePalette);
 
     return this.http.get<RandomRecipeDto[]>(
-      `${environment.mealPlannerUrl}/meal-planner/random-recipes/${numberOfRecipes}`
+      `${environment.mealPlannerUrl}/meal-planner/random-recipes/${numberOfRecipes}`,
+      { withCredentials: true }
     );
   }
 
@@ -600,7 +601,8 @@ export class PaletteService {
   ) {
     return this.http.post(
       `${environment.mealPlannerUrl}/meal-planner/send-recipes-in-email`,
-      { randomRecipes: selectedRecipes, ingredientsList: ingredientsList }
+      { randomRecipes: selectedRecipes, ingredientsList: ingredientsList },
+      { withCredentials: true }
     );
   }
 }
