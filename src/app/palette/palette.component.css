@@ -66,14 +66,14 @@ ion-button {
   margin-right: 20px;
 }
 
-.container > div {
+.container-landscape > div {
   border-radius: 5px;
   padding: 10px;
   background-color: rgb(207 232 220);
   border: 2px solid rgb(79 185 227);
 }
 
-.container {
+.container-landscape {
   margin: 40px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
@@ -126,4 +126,25 @@ ion-card-content {
   justify-content: end;
   text-transform: uppercase;
   height: max-content;
+}
+
+@media screen and (orientation: portrait) {
+  ion-toolbar ion-title {
+    padding: 30px 20px;
+    font-size: x-large;
+  }
+
+  ion-toolbar ion-buttons {
+    display: none !important;
+  }
+
+  .container-landscape {
+    display: none !important;
+  }
+}
+
+@media screen and (orientation: landscape) {
+  ion-footer {
+    display: none;
+  }
 }

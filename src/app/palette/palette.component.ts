@@ -32,6 +32,7 @@ import {
   IonTitle,
   IonSpinner,
   IonSkeletonText,
+  IonFooter,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { ToastController } from '@ionic/angular';
@@ -73,6 +74,7 @@ export interface IngredientInformation {
     IonCardContent,
     IonCard,
     IonSpinner,
+    IonFooter,
     IonSkeletonText,
     HttpClientModule,
     CommonModule,

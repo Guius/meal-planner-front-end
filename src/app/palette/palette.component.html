@@ -1,33 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ubuntu-sans-mono">Meal Planner / Palette</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="toolbar-button ubuntu-sans-mono" (click)="refresh()">
+        Refresh
+      </ion-button>
+      @if (this.isSendingEmail) {
+      <ion-button class="toolbar-button ubuntu-sans-mono">
+        <ion-spinner name="dots"></ion-spinner>
+      </ion-button>
+      } @else {
+      <ion-button
+        class="toolbar-button ubuntu-sans-mono"
+        (click)="sendRecipesByEmail()"
+      >
+        Send to email
+      </ion-button>
+      }
+      <ion-button
+        class="toolbar-button ubuntu-sans-mono"
+        (click)="presentToast('bottom', 'Test', 'success')"
+      >
+        Options
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 <ion-content>
-  <ion-header>
-    <ion-toolbar>
-      <ion-title class="ubuntu-sans-mono">Meal Planner / Palette</ion-title>
-      <ion-buttons slot="end">
-        <ion-button class="toolbar-button ubuntu-sans-mono" (click)="refresh()">
-          Refresh
-        </ion-button>
-        @if (this.isSendingEmail) {
-        <ion-button class="toolbar-button ubuntu-sans-mono">
-          <ion-spinner name="dots"></ion-spinner>
-        </ion-button>
-        } @else {
-        <ion-button
-          class="toolbar-button ubuntu-sans-mono"
-          (click)="sendRecipesByEmail()"
-        >
-          Send to email
-        </ion-button>
-        }
-        <ion-button
-          class="toolbar-button ubuntu-sans-mono"
-          (click)="presentToast('bottom', 'Test', 'success')"
-        >
-          Options
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-  <div class="container">
+  <div class="container-landscape">
     @if (recipesLoaded) {
     <ion-card
       *ngFor="let recipe of recipes; let i = index"
@@ -104,4 +104,6 @@
     </ion-card>
     }
   </div>
+  <div class="container-portrait"></div>
 </ion-content>
+<ion-footer><ion-title>Footer</ion-title></ion-footer>
