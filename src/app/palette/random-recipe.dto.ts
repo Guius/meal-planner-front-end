@@ -29,6 +29,7 @@ export interface InstructionStep {
 }
 
 export interface RandomRecipeDto {
+  id: string;
   description: string;
   diet: Diet;
   keywords: string[];

@@ -8,7 +8,7 @@ export const routes: Routes = [
   {
     path: 'palette',
     loadComponent: () =>
-      import('./palette/palette.component').then((m) => m.PaletteComponent),
+      import('./palette/palette-2.component').then((m) => m.Palette2Component),
   },
   {
     path: 'login',

@@ -92,10 +92,12 @@ export class PaletteComponent implements OnInit, AfterViewInit {
   @ViewChild(NgForm) optionsForm!: NgForm;
 
   rawRecipes: RandomRecipeDto[] = [];
-  recipes: RecipeOfPalette[] = [];
+  paletteRecipes: RecipeOfPalette[] = [];
+  simplifiedPaletteIngredientsList: string[] = [];
+  finalPaletteIngredients: Record<string, IngredientInformation> = {};
 
+  basketRecipes: RecipeOfPalette[] = [];
   simplifiedIngredientsList: string[] = [];
-
   finalIngredients: Record<string, IngredientInformation> = {};
 
   paletteItemsNumber: number = 5;
@@ -117,13 +119,13 @@ export class PaletteComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.getRandomRecipes(this.paletteItemsNumber);
+    console.log('init!');
   }
 
   async downloadPdf(): Promise<void> {
     let recipes: RandomRecipeDto[] = [];
-    for (let i = 0; i < this.recipes.length; i++) {
-      recipes.push(this.recipes[i].recipe);
+    for (let i = 0; i < this.basketRecipes.length; i++) {
+      recipes.push(this.basketRecipes[i].recipe);
     }
     await this.pdfService.generatePdf(this.simplifiedIngredientsList, recipes);
   }
@@ -131,17 +133,6 @@ export class PaletteComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     console.log(this.slidingItems);
     // Now the slidingItems list is initialized, and we can safely use it
-  }
-
-  refresh() {
-    let numberOfItemsLocked = 0;
-    for (let i = 0; i < this.recipes.length; i++) {
-      if (this.recipes[i].locked) numberOfItemsLocked++;
-    }
-    if (this.paletteItemsNumber - numberOfItemsLocked === 0) {
-      this.presentToast('bottom', 'You have locked all recipes', 'warning');
-    }
-    this.getRandomRecipes(this.paletteItemsNumber - numberOfItemsLocked);
   }
 
   async presentToast(
@@ -159,107 +150,87 @@ export class PaletteComponent implements OnInit, AfterViewInit {
     await toast.present();
   }
 
-  lockItem(itemIndex: number) {
-    if (this.recipes[itemIndex]) {
-      this.recipes[itemIndex].locked
-        ? (this.recipes[itemIndex].locked = false)
-        : (this.recipes[itemIndex].locked = true);
-      console.log(this.slidingItems);
-      const slidingItemsArray = this.slidingItems.toArray(); // Now it's safe to use this
+  addRecipeToBasket() {}
 
-      if (slidingItemsArray[itemIndex]) {
-        slidingItemsArray[itemIndex].close(); // Close the sliding item at the specified index
-      } else {
-        console.error('Sliding item at the specified index not found.');
-      }
-    }
-  }
-
-  getRandomRecipes(numberOfRecipes: number) {
+  /**
+   * Used when user refreshes selection or when page is first loaded.
+   */
+  getFullSetOfRandomRecipes(numberOfRecipes: number) {
     console.log(`getting ${numberOfRecipes} recipes from back end`);
-    this.service.getRandomRecipes(numberOfRecipes).subscribe({
-      next: (data) => {
-        console.info(data);
-        if (this.recipes.length === 0) {
+    this.service
+      .getRandomRecipes(
+        numberOfRecipes,
+        this.paletteRecipes.map((r) => r.recipe.id),
+        this.basketRecipes.map((r) => r.recipe.id)
+      )
+      .subscribe({
+        next: (data) => {
+          console.info(data);
           this.rawRecipes = data;
-          this.recipes = data.map((val) => {
+          this.paletteRecipes = data.map((val) => {
             return {
               recipe: val,
               locked: false,
             };
           });
-        } else {
-          // loop through current recipes of palette
-          for (let i = 0; i < this.recipes.length; i++) {
-            // if recipe of palette is locked then skip it
-            if (this.recipes[i].locked) continue;
-            // if recipe of palette is not locked, override it with recipe from back end
-            const lastRecipeOfBackEnd = data.pop();
-            if (!lastRecipeOfBackEnd) {
-              break;
-            }
-            this.recipes[i] = { recipe: lastRecipeOfBackEnd, locked: false };
-            this.rawRecipes[i] = lastRecipeOfBackEnd;
-          }
-        }
 
-        // get the final ingredients list
-        this.finalIngredients = {};
-        /**
-         * First create an object whose keys is every ingredient id.
-         * If that key already exists, then add the amounts together
-         */
-        for (
-          let recipeNumber = 0;
-          recipeNumber < this.recipes.length;
-          recipeNumber++
-        ) {
-          const recipe = this.recipes[recipeNumber];
-          const ingredients = recipe.recipe.recipeIngredient;
+          // get the final ingredients list
+          this.finalIngredients = {};
+          /**
+           * First create an object whose keys is every ingredient id.
+           * If that key already exists, then add the amounts together
+           */
+          for (
+            let recipeNumber = 0;
+            recipeNumber < this.paletteRecipes.length;
+            recipeNumber++
+          ) {
+            const recipe = this.paletteRecipes[recipeNumber];
+            const ingredients = recipe.recipe.recipeIngredient;
 
-          for (let i = 0; i < ingredients.length; i++) {
-            const ingredient = ingredients[i];
-            const amount = ingredient.amount;
-            const unit = ingredient.unit;
-            const name = ingredient.name;
-            const id = ingredient.ingredientId;
+            for (let i = 0; i < ingredients.length; i++) {
+              const ingredient = ingredients[i];
+              const amount = ingredient.amount;
+              const unit = ingredient.unit;
+              const name = ingredient.name;
+              const id = ingredient.ingredientId;
 
-            if (this.finalIngredients[id]) {
-              const existingAmount = parseFloat(
-                this.finalIngredients[id].amount
-              );
-              const newAmount = parseFloat(amount);
+              if (this.finalIngredients[id]) {
+                const existingAmount = parseFloat(
+                  this.finalIngredients[id].amount
+                );
+                const newAmount = parseFloat(amount);
 
-              this.finalIngredients[id].amount = (
-                existingAmount + newAmount
-              ).toString();
-            } else {
-              this.finalIngredients[id] = {
-                amount: amount,
-                unit: unit,
-                name: name,
-              };
+                this.finalIngredients[id].amount = (
+                  existingAmount + newAmount
+                ).toString();
+              } else {
+                this.finalIngredients[id] = {
+                  amount: amount,
+                  unit: unit,
+                  name: name,
+                };
+              }
             }
           }
-        }
 
-        // now make the object into an array so that the front end can easily show it
-        /**
-         * applies filter to an array made up the ingredients dictionary
-         */
-        this.simplifiedIngredientsList = this.applyFiltersToIngredientNames(
-          Object.values(this.finalIngredients).map((val) => {
-            return `${val.name} - ${val.amount} ${val.unit}`;
-          })
-        );
+          // now make the object into an array so that the front end can easily show it
+          /**
+           * applies filter to an array made up the ingredients dictionary
+           */
+          this.simplifiedIngredientsList = this.applyFiltersToIngredientNames(
+            Object.values(this.finalIngredients).map((val) => {
+              return `${val.name} - ${val.amount} ${val.unit}`;
+            })
+          );
 
-        this.recipesLoaded = true;
-      },
-      error: async (err) => {
-        await this.presentToast('bottom', 'Error loading recipes', 'error');
-        this.recipesLoaded = true;
-      },
-    });
+          this.recipesLoaded = true;
+        },
+        error: async (err) => {
+          await this.presentToast('bottom', 'Error loading recipes', 'error');
+          this.recipesLoaded = true;
+        },
+      });
   }
 
   async sendRecipesByEmail() {
@@ -354,25 +325,6 @@ export class PaletteComponent implements OnInit, AfterViewInit {
   submitted = false;
   cancel() {
     this.modal.dismiss(null, 'cancel');
-  }
-
-  confirm() {
-    this.submitted = true;
-
-    let personalValid = true;
-
-    if (
-      this.paletteItemsNumber > this.maxNumber ||
-      this.paletteItemsNumber < this.minNumber
-    ) {
-      personalValid = false;
-    }
-
-    if (this.optionsForm.valid && personalValid) {
-      this.modal.dismiss(this.name, 'confirm');
-      this.recipes = [];
-      this.getRandomRecipes(this.paletteItemsNumber);
-    }
   }
 
   onWillDismiss(event: Event) {
