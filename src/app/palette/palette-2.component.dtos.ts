@@ -7,7 +7,7 @@ export interface UnifiedRecipe {
   recipeName: string;
   recipeTotalTime: string;
   recipeDiet: Diet;
-  simplifiedIngredientsList: string[];
+  simplifiedIngredientsList: string;
 
   // Full recipe data
   fullRecipe: RandomRecipeDto;

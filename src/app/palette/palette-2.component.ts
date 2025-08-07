@@ -1,19 +1,54 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { RandomRecipeDto } from './random-recipe.dto';
+import { NgClass, UpperCasePipe, CommonModule } from '@angular/common';
+import { Ingredient, RandomRecipeDto } from './random-recipe.dto';
 import { PaletteService } from './palette.service';
 import { IngredientInformation } from './palette.component';
 import { UnifiedRecipe } from './palette-2.component.dtos';
 import { ToastController } from '@ionic/angular';
+
+import {
+  IonTitle,
+  IonButtons,
+  IonToolbar,
+  IonHeader,
+  IonButton,
+  IonContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonCard,
+  IonFooter,
+  IonSkeletonText,
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-palette-2',
   templateUrl: 'palette-2.component.html',
   styleUrl: 'palette.component.css',
   standalone: true,
+  imports: [
+    CommonModule,
+    NgClass,
+    UpperCasePipe,
+    IonTitle,
+    IonButtons,
+    IonToolbar,
+    IonHeader,
+    IonButton,
+    IonContent,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonCard,
+    IonFooter,
+    IonSkeletonText,
+  ],
+  providers: [PaletteService],
 })
-export class Palette2Component implements OnInit, AfterViewInit {
+export class Palette2Component implements OnInit {
   paletteRecipes: UnifiedRecipe[] = [];
   basketRecipes: UnifiedRecipe[] = [];
+  recipesLoaded: boolean = false;
 
   constructor(
     private service: PaletteService,
@@ -21,11 +56,7 @@ export class Palette2Component implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    console.log('init!');
-  }
-
-  ngAfterViewInit() {
-    console.log('after view init!');
+    this.fullPaletteRefresh();
   }
 
   /**
@@ -33,6 +64,7 @@ export class Palette2Component implements OnInit, AfterViewInit {
    * These recipes are different recipes from what is currently in the palette and the basket
    */
   fullPaletteRefresh() {
+    this.recipesLoaded = false;
     this.service
       .getRandomRecipes(
         5,
@@ -42,6 +74,12 @@ export class Palette2Component implements OnInit, AfterViewInit {
       .subscribe({
         next: (data: RandomRecipeDto[]) => {
           this.paletteRecipes = data.map((r) => this.createUnifiedRecipe(r));
+          this.recipesLoaded = true;
+        },
+        error: (error) => {
+          console.error('Error loading recipes:', error);
+          this.recipesLoaded = true;
+          this.presentToast('bottom', 'Failed to load recipes!', 'error');
         },
       });
   }
@@ -198,56 +236,25 @@ export class Palette2Component implements OnInit, AfterViewInit {
       recipeDiet: recipeDto.diet,
       recipeName: this.prettifyRecipeName(recipeDto.name),
       recipeTotalTime: this.prettifyPrepTime(recipeDto.totalTime),
-      simplifiedIngredientsList:
-        this.giveMeASimplifiedListOfIngredientsForRecipe(recipeDto),
+      simplifiedIngredientsList: this.giveMeSimpleIngredientList(
+        recipeDto.recipeIngredient
+      ),
       fullRecipe: recipeDto,
     };
   }
 
-  giveMeASimplifiedListOfIngredientsForRecipe(
-    recipe: RandomRecipeDto
-  ): string[] {
-    // get the final ingredients list
-    const finalIngredients: Record<string, IngredientInformation> = {};
-    /**
-     * First create an object whose keys is every ingredient id.
-     * If that key already exists, then add the amounts together
-     */
+  giveMeSimpleIngredientList(ingredients: Ingredient[]): string {
+    console.log(ingredients);
+    let ingredientNames = ingredients.map((val: Ingredient): string => {
+      return val.name;
+    });
 
-    const ingredients = recipe.recipeIngredient;
+    console.log(ingredientNames.join(', '));
 
-    for (let i = 0; i < ingredients.length; i++) {
-      const ingredient = ingredients[i];
-      const amount = ingredient.amount;
-      const unit = ingredient.unit;
-      const name = ingredient.name;
-      const id = ingredient.ingredientId;
+    ingredientNames = this.applyFiltersToIngredientNames(ingredientNames);
 
-      if (finalIngredients[id]) {
-        const existingAmount = parseFloat(finalIngredients[id].amount);
-        const newAmount = parseFloat(amount);
-
-        finalIngredients[id].amount = (existingAmount + newAmount).toString();
-      } else {
-        finalIngredients[id] = {
-          amount: amount,
-          unit: unit,
-          name: name,
-        };
-      }
-    }
-
-    // now make the object into an array so that the front end can easily show it
-    /**
-     * applies filter to an array made up the ingredients dictionary
-     */
-    const simplifiedIngredientsList = this.applyFiltersToIngredientNames(
-      Object.values(finalIngredients).map((val) => {
-        return `${val.name} - ${val.amount} ${val.unit}`;
-      })
-    );
-
-    return simplifiedIngredientsList;
+    console.log(ingredientNames.join(', '));
+    return ingredientNames.join(', ');
   }
 
   applyFiltersToIngredientNames(ingredientNames: string[]): string[] {
