@@ -20,6 +20,7 @@ import {
   IonFooter,
   IonSkeletonText,
   IonMenu,
+  IonIcon,
   IonMenuToggle,
 } from '@ionic/angular/standalone';
 
@@ -33,6 +34,7 @@ import {
     NgClass,
     UpperCasePipe,
     IonMenu,
+    IonIcon,
     IonMenuToggle,
     IonTitle,
     IonButtons,

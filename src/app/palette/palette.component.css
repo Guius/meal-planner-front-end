@@ -2,6 +2,11 @@ ion-content {
   --background: #f5f5f5;
 }
 
+ion-menu {
+  --width: 33.33vw;
+  --background: #fefaf4;
+}
+
 ion-toolbar {
   --background: #f5f5f5;
   --color: black;
@@ -54,6 +59,27 @@ ion-button {
   --padding-bottom: 10px;
   --min-width: 50px !important;
   text-transform: uppercase;
+}
+
+ion-menu::part(container) {
+  background-color: #fefaf4 !important;
+}
+
+/* Additional targeting for the menu content */
+ion-menu ion-content {
+  --background: #fefaf4 !important;
+}
+ion-menu ion-toolbar {
+  --background: #fefaf4 !important;
+  --border-color: #fefaf4 !important;
+}
+
+.basket-title {
+  font-size: xx-large;
+}
+
+.basket-button {
+  --background: none !important;
 }
 
 .toolbar-button {
