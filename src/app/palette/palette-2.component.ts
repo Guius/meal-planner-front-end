@@ -19,6 +19,8 @@ import {
   IonCard,
   IonFooter,
   IonSkeletonText,
+  IonMenu,
+  IonMenuToggle,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -30,6 +32,8 @@ import {
     CommonModule,
     NgClass,
     UpperCasePipe,
+    IonMenu,
+    IonMenuToggle,
     IonTitle,
     IonButtons,
     IonToolbar,
