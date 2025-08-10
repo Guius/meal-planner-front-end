@@ -32,10 +32,7 @@
 <ion-content>
   <div class="container-landscape">
     @if (recipesLoaded) {
-    <ion-card
-      *ngFor="let recipe of paletteRecipes; let i = index"
-      (click)="this.addRecipeToBasket(recipe)"
-    >
+    <ion-card *ngFor="let recipe of paletteRecipes; let i = index">
       <ion-card-header
         [ngClass]="recipe.recipeDiet === 'Non-Meat' ? 'veggie' : 'meatie'"
       >
@@ -53,6 +50,15 @@
           {{ recipe.simplifiedIngredientsList }}
         </div>
       </ion-card-content>
+
+      <ion-button
+        expand="full"
+        fill="solid"
+        class="card-action-button ubuntu-sans-mono"
+        (click)="this.addRecipeToBasket(recipe)"
+      >
+        + BASKET
+      </ion-button>
     </ion-card>
     } @else {
     <ion-card>

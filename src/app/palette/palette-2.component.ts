@@ -73,6 +73,8 @@ export class Palette2Component implements OnInit {
       )
       .subscribe({
         next: (data: RandomRecipeDto[]) => {
+          console.log('Full palette data:');
+          console.log(data);
           this.paletteRecipes = data.map((r) => this.createUnifiedRecipe(r));
           this.recipesLoaded = true;
         },
@@ -118,6 +120,8 @@ export class Palette2Component implements OnInit {
       )
       .subscribe({
         next: (data: RandomRecipeDto) => {
+          console.log('NEW RECIPE DATA:');
+          console.log(data);
           const newPaletteRecipe: UnifiedRecipe =
             this.createUnifiedRecipe(data);
 
@@ -136,8 +140,6 @@ export class Palette2Component implements OnInit {
         },
       });
   }
-
-  getOneNewRecipe() {}
 
   /**
    * Removes a recipe from the basket
