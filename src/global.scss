@@ -59,7 +59,11 @@
 }
 
 ion-button:hover {
-  --background-hover: #f7aa8f !important;
+  --background: #f7aa8f !important;
+}
+
+ion-menu ion-button:hover {
+  --background: #f7aa8f !important;
 }
 
 .form-input-box {

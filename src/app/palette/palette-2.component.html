@@ -9,7 +9,31 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-content class="ion-padding">This is the menu content.</ion-content>
+  <ion-content class="ion-padding">
+    @if (basketRecipes.length > 0) {
+    <div class="basket-recipes-list">
+      @for (recipe of basketRecipes; track recipe.id) {
+      <div
+        class="basket-recipe-item ubuntu-sans-mono"
+        [ngClass]="recipe.recipeDiet === 'Non-Meat' ? 'veggie' : 'meatie'"
+      >
+        {{ recipe.recipeName }}
+      </div>
+      }
+    </div>
+    } @else {
+    <div class="empty-basket ubuntu-sans-mono">No recipes in basket yet</div>
+    }
+  </ion-content>
+  <ion-footer>
+    <ion-toolbar>
+      <div class="menu-footer-button-container">
+        <ion-button class="menu-footer-button ubuntu-sans-mono">
+          Send to Email
+        </ion-button>
+      </div>
+    </ion-toolbar>
+  </ion-footer>
 </ion-menu>
 
 <ion-header>
