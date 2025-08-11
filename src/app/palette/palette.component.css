@@ -101,7 +101,7 @@ ion-menu ion-button:hover {
 .basket-recipes-list {
   display: grid;
   grid-template-columns: 1fr;
-  grid-auto-rows: minmax(100px, 1fr);
+  grid-auto-rows: 100px; /* Fixed row height */
   gap: 30px;
 }
 
@@ -112,10 +112,54 @@ ion-menu ion-button:hover {
   text-align: left;
   display: flex;
   align-items: center;
-  min-height: 100px;
-  height: auto;
+  justify-content: center;
+  height: 100px; /* Fixed height */
   font-size: x-large;
   margin: 0 70px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden; /* Prevent content overflow */
+}
+
+.recipe-name {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 10px; /* Add some padding to prevent text from touching edges */
+}
+
+.recipe-buttons {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.basket-recipe-item:hover .recipe-name {
+  display: none;
+}
+
+.basket-recipe-item:hover .recipe-buttons {
+  display: flex;
+}
+
+.recipe-action-button {
+  --background: rgba(255, 255, 255, 0.9);
+  --color: black;
+  --padding-top: 0px !important;
+  --padding-bottom: 0px !important;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  font-size: medium;
+  width: 20%;
 }
 
 .basket-recipe-item.veggie {
