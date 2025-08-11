@@ -108,7 +108,7 @@
         class="card-action-button ubuntu-sans-mono"
         (click)="this.addRecipeToBasket(recipe)"
       >
-        + BASKET
+        {{ getRandomButtonText() }}
       </ion-button>
     </ion-card>
     } @else {

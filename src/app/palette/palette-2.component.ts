@@ -313,4 +313,45 @@ export class Palette2Component implements OnInit {
 
     await toast.present();
   }
+
+  /**
+   * Returns a random button text from the predefined list
+   */
+  getRandomButtonText(): string {
+    const buttonTexts = [
+      'Mmm, looks tasty!',
+      'Yum yum!',
+      'Onto my plate!',
+      'Into my belly!',
+      'Yes, please!',
+      'Gimme!',
+      'So delicious!',
+      'My kind of dish!',
+      'Get in my pot!',
+      'Cooking this!',
+      'Save this recipe',
+      'Add to my picks',
+      "I'll try this",
+      'Add to my list',
+      'Count me in',
+      "Let's cook this",
+      'On the menu',
+      'Add to favourites',
+      'My next meal',
+      'Dinner sorted',
+      'Must make!',
+      'Oh yes!',
+      "This one's mine!",
+      "Chef's choice!",
+      "Can't resist",
+      'Need this recipe',
+      "Let's make magic",
+      'Craving satisfied',
+      'Serve it up',
+      'In my kitchen',
+    ];
+
+    const randomIndex = Math.floor(Math.random() * buttonTexts.length);
+    return buttonTexts[randomIndex];
+  }
 }
