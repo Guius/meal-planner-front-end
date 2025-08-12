@@ -20,8 +20,11 @@
         <span class="recipe-name">{{ recipe.recipeName }}</span>
         <div class="recipe-buttons">
           <ion-button class="recipe-action-button ubuntu-sans-mono"
-            >REMOVE</ion-button
-          >
+            >REMOVE<ion-icon
+              slot="end"
+              src="../../assets/icon/cart-delete.svg"
+            ></ion-icon
+          ></ion-button>
           <ion-button class="recipe-action-button ubuntu-sans-mono"
             >VIEW</ion-button
           >
@@ -108,7 +111,7 @@
         class="card-action-button ubuntu-sans-mono"
         (click)="this.addRecipeToBasket(recipe)"
       >
-        {{ getRandomButtonText() }}
+        Add to selection
       </ion-button>
     </ion-card>
     } @else {

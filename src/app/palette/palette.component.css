@@ -44,7 +44,9 @@ ion-title {
 
 ion-button {
   --background: #fdf4f3;
-  --background-hover: #9ce0be;
+  --background-hover: #f7aa8f;
+  --background-activated: #f7aa8f;
+  --background-focused: #f7aa8f;
 
   --color: black;
 
@@ -85,6 +87,9 @@ ion-menu ion-toolbar {
 /* Override hover for buttons inside the menu */
 ion-menu ion-button:hover {
   --background: #f7aa8f !important;
+  --background-hover: #fefaf4;
+  --background-activated: #fefaf4;
+  --background-focused: #fefaf4;
 }
 
 .menu-footer-button-container {

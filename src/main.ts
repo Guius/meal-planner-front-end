@@ -16,6 +16,17 @@ import { importProvidersFrom } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { provideHttpClient } from '@angular/common/http';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+
+// Import Ionic icons
+import { addIcons } from 'ionicons';
+import { heart, heartOutline } from 'ionicons/icons';
+
+// Register icons
+addIcons({
+  heart,
+  'heart-outline': heartOutline,
+});
+
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
