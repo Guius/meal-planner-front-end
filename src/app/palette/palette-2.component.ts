@@ -354,4 +354,15 @@ export class Palette2Component implements OnInit {
     const randomIndex = Math.floor(Math.random() * buttonTexts.length);
     return buttonTexts[randomIndex];
   }
+
+  /**
+   * Opens a recipe URL in a new browser tab
+   */
+  openRecipeUrl(recipe: UnifiedRecipe): void {
+    if (recipe.fullRecipe.recipeUrl) {
+      window.open(recipe.fullRecipe.recipeUrl, '_blank');
+    } else {
+      this.presentToast('bottom', 'Recipe URL not available', 'warning');
+    }
+  }
 }

@@ -41,6 +41,7 @@ export interface RandomRecipeDto {
   recipeInstructions: InstructionStep[];
   recipeYield: number;
   totalTime: string;
+  recipeUrl: string;
 }
 
 export interface RecipeOfPalette {
