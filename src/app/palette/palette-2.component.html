@@ -49,12 +49,24 @@
   <ion-footer>
     <ion-toolbar>
       <div class="menu-footer-button-container">
-        <ion-button class="menu-footer-button ubuntu-sans-mono">
+        @if (isSendingEmail) {
+        <ion-button
+          class="menu-footer-button ubuntu-sans-mono"
+          [disabled]="true"
+        >
+          <ion-spinner name="dots"></ion-spinner>
+        </ion-button>
+        } @else {
+        <ion-button
+          class="menu-footer-button ubuntu-sans-mono"
+          (click)="this.sendBasketRecipesToEmail()"
+        >
           Send to Email<ion-icon
             slot="end"
             src="../../assets/icon/send.svg"
           ></ion-icon>
         </ion-button>
+        }
       </div>
     </ion-toolbar>
   </ion-footer>

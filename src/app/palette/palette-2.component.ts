@@ -22,6 +22,7 @@ import {
   IonMenu,
   IonIcon,
   IonMenuToggle,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -48,13 +49,16 @@ import {
     IonCard,
     IonFooter,
     IonSkeletonText,
+    IonSpinner,
   ],
   providers: [PaletteService],
 })
 export class Palette2Component implements OnInit {
   paletteRecipes: UnifiedRecipe[] = [];
   basketRecipes: UnifiedRecipe[] = [];
+  basketIngredientsList: string[] = [];
   recipesLoaded: boolean = false;
+  isSendingEmail: boolean = false;
 
   constructor(
     private service: PaletteService,
@@ -137,6 +141,9 @@ export class Palette2Component implements OnInit {
           // Replace the palette recipe with the new one
           this.paletteRecipes[indexOfRecipeInPalette] = newPaletteRecipe;
 
+          // Update the basket ingredients list
+          this.updateBasketIngredientsList();
+
           // Show success message
           this.presentToast('bottom', 'Recipe added to basket!', 'success');
         },
@@ -162,6 +169,10 @@ export class Palette2Component implements OnInit {
     }
 
     this.basketRecipes.splice(indexOfRecipeInBasket, 1);
+
+    // Update the basket ingredients list
+    this.updateBasketIngredientsList();
+
     this.presentToast('bottom', 'Recipe removed from basket!', 'success');
   }
 
@@ -174,16 +185,18 @@ export class Palette2Component implements OnInit {
       return;
     }
 
-    // Extract the full recipe DTOs and create ingredients list
+    this.isSendingEmail = true;
+
+    // Extract the full recipe DTOs and use the existing ingredients list
     const selectedRecipes = this.basketRecipes.map(
       (recipe) => recipe.fullRecipe
     );
-    const ingredientsList = this.createCombinedIngredientsList(selectedRecipes);
 
     this.service
-      .sendRecipesToEmail(selectedRecipes, ingredientsList)
+      .sendRecipesToEmail(selectedRecipes, this.basketIngredientsList)
       .subscribe({
         next: () => {
+          this.isSendingEmail = false;
           this.presentToast(
             'bottom',
             'Recipes sent to email successfully!',
@@ -191,6 +204,7 @@ export class Palette2Component implements OnInit {
           );
         },
         error: (error) => {
+          this.isSendingEmail = false;
           console.error('Error sending recipes to email:', error);
           this.presentToast(
             'bottom',
@@ -233,6 +247,22 @@ export class Palette2Component implements OnInit {
         return `${val.name} - ${val.amount} ${val.unit}`;
       })
     );
+  }
+
+  /**
+   * Updates the basket ingredients list whenever the basket changes
+   */
+  private updateBasketIngredientsList(): void {
+    if (this.basketRecipes.length === 0) {
+      this.basketIngredientsList = [];
+      return;
+    }
+
+    const selectedRecipes = this.basketRecipes.map(
+      (recipe) => recipe.fullRecipe
+    );
+    this.basketIngredientsList =
+      this.createCombinedIngredientsList(selectedRecipes);
   }
 
   /**
