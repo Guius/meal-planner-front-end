@@ -17,7 +17,10 @@
         class="basket-recipe-item ubuntu-sans-mono"
         [ngClass]="recipe.recipeDiet === 'Non-Meat' ? 'veggie' : 'meatie'"
       >
-        <span class="recipe-name">{{ recipe.recipeName }}</span>
+        <span
+          class="recipe-name"
+          [innerHTML]="getFormattedRecipeName(recipe)"
+        ></span>
         <div class="recipe-buttons">
           <ion-button
             class="recipe-action-button ubuntu-sans-mono"
@@ -100,9 +103,11 @@
       <ion-card-header
         [ngClass]="recipe.recipeDiet === 'Non-Meat' ? 'veggie' : 'meatie'"
       >
-        <ion-card-title class="ubuntu-sans-mono">{{
-          recipe.recipeName
-        }}</ion-card-title>
+        <ion-card-title
+          class="ubuntu-sans-mono"
+          [innerHTML]="getFormattedRecipeName(recipe)"
+        >
+        </ion-card-title>
       </ion-card-header>
 
       <ion-card-content class="kalam ingredients-list">

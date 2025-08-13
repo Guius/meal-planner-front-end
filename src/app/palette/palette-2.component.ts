@@ -365,4 +365,14 @@ export class Palette2Component implements OnInit {
       this.presentToast('bottom', 'Recipe URL not available', 'warning');
     }
   }
+
+  /**
+   * Formats recipe name with (v) suffix for vegetarian recipes
+   */
+  getFormattedRecipeName(recipe: UnifiedRecipe): string {
+    const baseName = recipe.recipeName;
+    return recipe.recipeDiet === 'Non-Meat'
+      ? `${baseName} <i>(v)</i>`
+      : baseName;
+  }
 }
