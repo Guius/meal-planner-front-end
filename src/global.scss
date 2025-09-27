@@ -49,6 +49,7 @@
   --app-success: #bbb499;
   --app-warning: #d2aa61;
   --app-error: #cf7d52;
+  --subtitle-bg: #f9eee2;
 }
 
 ion-content {
@@ -56,6 +57,8 @@ ion-content {
 }
 ion-content::part(scroll) {
   padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 5%;
 }
 
 .ubuntu-sans-mono {
