@@ -51,6 +51,13 @@
   --app-error: #cf7d52;
 }
 
+ion-content {
+  --background: var(--app-background-light);
+}
+ion-content::part(scroll) {
+  padding-left: 5%;
+}
+
 .ubuntu-sans-mono {
   font-family: "Ubuntu Sans Mono", monospace;
   font-optical-sizing: auto;

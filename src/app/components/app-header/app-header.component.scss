@@ -1,7 +1,14 @@
 ion-title {
   text-align: left;
-  --padding-left: 20px;
+
+  font-family: "Ubuntu Sans Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+
   text-transform: uppercase;
+
+  padding-left: 5%;
 }
 
 ion-toolbar {
@@ -10,6 +17,4 @@ ion-toolbar {
   --border-color: var(--app-background-light);
 
   --min-height: 50px;
-  --padding-top: 20px;
-  --padding-bottom: 20px;
 }
