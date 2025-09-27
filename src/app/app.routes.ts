@@ -18,7 +18,9 @@ export const routes: Routes = [
   {
     path: 'user-preferences',
     loadComponent: () =>
-      import('./user-preferences/user-preferences.component').then((m) => m.UserPreferencesComponent),
+      import('./user-preferences/user-preferences.component').then(
+        (m) => m.UserPreferencesComponent
+      ),
   },
   {
     path: '',

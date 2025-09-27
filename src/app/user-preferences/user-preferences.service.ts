@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserPreferencesService {
   constructor() {}
@@ -12,7 +12,7 @@ export class UserPreferencesService {
     return of({
       theme: 'light',
       notifications: true,
-      language: 'en'
+      language: 'en',
     });
   }
 
