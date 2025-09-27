@@ -41,6 +41,16 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 // @import "@ionic/angular/css/palettes/dark.system.css";
 
+/* App Color Palette */
+:root {
+  --app-background-light: #f5f5f5;
+  --app-text-dark: #000000;
+  --app-accent-orange: #f7aa8f;
+  --app-success: #bbb499;
+  --app-warning: #d2aa61;
+  --app-error: #cf7d52;
+}
+
 .ubuntu-sans-mono {
   font-family: "Ubuntu Sans Mono", monospace;
   font-optical-sizing: auto;
@@ -64,11 +74,11 @@
 }
 
 ion-button:hover {
-  --background: #f7aa8f !important;
+  --background: var(--app-accent-orange) !important;
 }
 
 ion-menu ion-button:hover {
-  --background: #f7aa8f !important;
+  --background: var(--app-accent-orange) !important;
 }
 
 .form-input-box {
@@ -76,7 +86,7 @@ ion-menu ion-button:hover {
 }
 
 .form-input-error {
-  color: #f7aa8f;
+  color: var(--app-accent-orange);
   text-transform: uppercase;
   font-weight: bold;
   font-family: "Ubuntu Sans Mono", monospace;
@@ -85,15 +95,15 @@ ion-menu ion-button:hover {
 }
 
 ion-toast.success-toast {
-  --background: #bbb499;
+  --background: var(--app-success);
 }
 
 ion-toast.warning-toast {
-  --background: #d2aa61;
+  --background: var(--app-warning);
 }
 
 ion-toast.error-toast {
-  --background: #cf7d52;
+  --background: var(--app-error);
 }
 
 ion-toast.custom-toast {

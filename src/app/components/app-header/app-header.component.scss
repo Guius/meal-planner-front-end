@@ -5,12 +5,9 @@ ion-title {
 }
 
 ion-toolbar {
-  --background: #f5f5f5;
-  --color: black;
-
-  --border-color: #f5f5f5;
-  /* --border-width: 4px 0; */
-  /* --border-style: double; */
+  --background: var(--app-background-light);
+  --color: var(--app-text-dark);
+  --border-color: var(--app-background-light);
 
   --min-height: 50px;
   --padding-top: 20px;
