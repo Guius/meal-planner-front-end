@@ -1,0 +1,13 @@
+ion-chip {
+  --background: var(--app-accent-orange);
+  border-radius: 0px;
+}
+
+ion-label {
+  font-family: "Ubuntu Sans Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+
+  text-transform: uppercase;
+}
