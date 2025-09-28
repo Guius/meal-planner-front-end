@@ -19,6 +19,6 @@ export class MultipleChoiceComponent {
   testItem: MultipleChoiceItem = {
     id: '123',
     label: 'No specific diet',
-    selected: false,
+    selected: true,
   };
 }

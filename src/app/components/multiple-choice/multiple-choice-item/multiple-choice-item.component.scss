@@ -11,3 +11,11 @@ ion-label {
 
   text-transform: uppercase;
 }
+
+ion-icon.icon-hidden {
+  visibility: hidden;
+}
+
+ion-icon {
+  margin-left: 20px;
+}

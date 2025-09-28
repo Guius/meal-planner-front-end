@@ -1,9 +1,9 @@
-<ion-chip>
+<ion-chip (click)="toggleItemSelected()">
   <div class="pl-5 pr-5">
     <ion-label>{{ this.multipleChoiceItem.label }}</ion-label>
     <ion-icon
       src="./../../../../assets/icon/tick.svg"
-      [hidden]="!this.multipleChoiceItem.selected"
+      [class.icon-hidden]="!this.multipleChoiceItem.selected"
     ></ion-icon>
   </div>
 </ion-chip>
