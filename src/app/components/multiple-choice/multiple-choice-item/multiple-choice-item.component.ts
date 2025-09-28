@@ -1,11 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-
-export interface MultipleChoiceItem {
-  id: string;
-  label: string;
-  selected: boolean;
-}
+import { MultipleChoiceItem } from '../types';
 
 @Component({
   selector: 'app-multiple-choice-item',

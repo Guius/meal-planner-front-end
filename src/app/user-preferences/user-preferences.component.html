@@ -4,12 +4,14 @@
     <div class="h-16">
       <app-subtitle subtitle="Diet"></app-subtitle>
     </div>
-    <div class="h-32 mt-5">
+    <div class="h-32 mt-5 flex flex-col">
       <app-select-label
         label="Please select your diet"
         align="left"
+        class="flex-none"
       ></app-select-label>
-      <app-multiple-choice></app-multiple-choice>
+      <app-multiple-choice [items]="dietOptions" class="flex-1">
+      </app-multiple-choice>
     </div>
   </div>
 </ion-content>

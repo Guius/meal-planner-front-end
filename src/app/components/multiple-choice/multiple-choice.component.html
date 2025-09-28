@@ -1,1 +1,5 @@
-<app-multiple-choice-item [input]="this.testItem"></app-multiple-choice-item>
+<app-multiple-choice-item
+  *ngFor="let item of items; trackBy: trackByItemId"
+  [input]="item"
+>
+</app-multiple-choice-item>

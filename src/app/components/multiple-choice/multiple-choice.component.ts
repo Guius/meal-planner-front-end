@@ -1,24 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { MultipleChoiceItemComponent } from './multiple-choice-item/multiple-choice-item.component';
-
-export interface MultipleChoiceItem {
-  id: string;
-  label: string;
-  selected: boolean;
-}
+import { MultipleChoiceItem } from './types';
 
 @Component({
   selector: 'app-multiple-choice',
   templateUrl: './multiple-choice.component.html',
   styleUrls: ['./multiple-choice.component.scss'],
   standalone: true,
-  imports: [IonicModule, MultipleChoiceItemComponent],
+  imports: [CommonModule, IonicModule, MultipleChoiceItemComponent],
 })
 export class MultipleChoiceComponent {
-  testItem: MultipleChoiceItem = {
-    id: '123',
-    label: 'No specific diet',
-    selected: true,
-  };
+  @Input() items: MultipleChoiceItem[] = [];
+
+  trackByItemId(index: number, item: MultipleChoiceItem): string {
+    return item.id;
+  }
 }
