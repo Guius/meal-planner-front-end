@@ -10,6 +10,7 @@
     <app-multiple-choice-item
       *ngFor="let item of items; trackBy: trackByItemId"
       [input]="item"
+      (output)="multipleChoiceItemUpdate($event)"
     >
     </app-multiple-choice-item>
   </div>

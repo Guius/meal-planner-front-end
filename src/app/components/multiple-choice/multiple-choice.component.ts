@@ -20,7 +20,25 @@ import { SelectLabelComponent } from '../select-label/select-label.component';
 export class MultipleChoiceComponent {
   @Input() items: MultipleChoiceItem[] = [];
 
+  itemsSelected: MultipleChoiceItem[] = [];
+
   trackByItemId(index: number, item: MultipleChoiceItem): string {
     return item.id;
+  }
+
+  multipleChoiceItemUpdate(item: MultipleChoiceItem) {
+    // Toggle the selected state of the item
+    if (item.selected) {
+      // Add item to selected array if it's now selected
+      this.itemsSelected.push(item);
+    } else {
+      // Remove item from selected array if it's now unselected
+      const index = this.itemsSelected.findIndex(
+        (selectedItem) => selectedItem.id === item.id
+      );
+      if (index > -1) {
+        this.itemsSelected.splice(index, 1);
+      }
+    }
   }
 }

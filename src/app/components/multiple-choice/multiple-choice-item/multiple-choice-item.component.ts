@@ -22,6 +22,7 @@ export class MultipleChoiceItemComponent implements OnInit {
 
   toggleItemSelected() {
     this.multipleChoiceItem.selected = !this.multipleChoiceItem.selected;
+    this.sendUpdate();
   }
 
   sendUpdate() {

@@ -19,7 +19,7 @@ export class UserPreferencesComponent {
     {
       id: '1',
       label: 'No specific diet',
-      selected: true,
+      selected: false,
     },
     {
       id: '2',
