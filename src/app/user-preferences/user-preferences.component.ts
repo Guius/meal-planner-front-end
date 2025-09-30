@@ -12,13 +12,7 @@ import { MultipleChoiceItem } from '../components/multiple-choice/types';
   templateUrl: 'user-preferences.component.html',
   styleUrls: ['user-preferences.component.scss'],
   standalone: true,
-  imports: [
-    AppHeaderComponent,
-    AppSubtitleComponent,
-    IonContent,
-    SelectLabelComponent,
-    MultipleChoiceComponent,
-  ],
+  imports: [AppHeaderComponent, IonContent, MultipleChoiceComponent],
 })
 export class UserPreferencesComponent {
   dietOptions: MultipleChoiceItem[] = [

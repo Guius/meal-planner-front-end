@@ -3,13 +3,19 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { MultipleChoiceItemComponent } from './multiple-choice-item/multiple-choice-item.component';
 import { MultipleChoiceItem } from './types';
+import { SelectLabelComponent } from '../select-label/select-label.component';
 
 @Component({
   selector: 'app-multiple-choice',
   templateUrl: './multiple-choice.component.html',
   styleUrls: ['./multiple-choice.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, MultipleChoiceItemComponent],
+  imports: [
+    CommonModule,
+    IonicModule,
+    MultipleChoiceItemComponent,
+    SelectLabelComponent,
+  ],
 })
 export class MultipleChoiceComponent {
   @Input() items: MultipleChoiceItem[] = [];

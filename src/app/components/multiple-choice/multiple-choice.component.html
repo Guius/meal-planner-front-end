@@ -1,5 +1,16 @@
-<app-multiple-choice-item
-  *ngFor="let item of items; trackBy: trackByItemId"
-  [input]="item"
->
-</app-multiple-choice-item>
+<div class="flex flex-col">
+  <div>
+    <app-select-label
+      label="Please select your diet"
+      align="left"
+      class="flex-none"
+    ></app-select-label>
+  </div>
+  <div class="h-32 flex flex-wrap mt-10">
+    <app-multiple-choice-item
+      *ngFor="let item of items; trackBy: trackByItemId"
+      [input]="item"
+    >
+    </app-multiple-choice-item>
+  </div>
+</div>
