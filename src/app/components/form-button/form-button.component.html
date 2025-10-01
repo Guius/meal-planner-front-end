@@ -1,6 +1,6 @@
 <button
   (click)="buttonClicked()"
-  class="bg-button_bg rounded-none py-2 px-8 font-ubunutu_sans_mono uppercase"
+  class="bg-button_bg hover:bg-button_bg_hover active:bg-button_bg_active focus:bg-button_bg_focus disabled:bg-button_bg_disabled rounded-none py-2 px-8 font-ubunutu_sans_mono uppercase transition-colors duration-150"
 >
   {{ this.text }}
 </button>
