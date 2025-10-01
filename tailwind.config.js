@@ -6,6 +6,7 @@ module.exports = {
       colors: {
         subtitle: "#f9eee2",
         "content-text-grey": "#616161",
+        button_bg: "#fdf4f3",
       },
       borderColor: {
         "content-text-grey": "#D0D0D0",

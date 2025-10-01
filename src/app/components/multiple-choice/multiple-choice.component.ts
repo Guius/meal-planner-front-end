@@ -4,6 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { MultipleChoiceItemComponent } from './multiple-choice-item/multiple-choice-item.component';
 import { MultipleChoiceItem } from './types';
 import { SelectLabelComponent } from '../select-label/select-label.component';
+import { FormButtonComponent } from '../form-button/form-button.component';
 
 @Component({
   selector: 'app-multiple-choice',
@@ -15,6 +16,7 @@ import { SelectLabelComponent } from '../select-label/select-label.component';
     IonicModule,
     MultipleChoiceItemComponent,
     SelectLabelComponent,
+    FormButtonComponent,
   ],
 })
 export class MultipleChoiceComponent {
@@ -40,5 +42,9 @@ export class MultipleChoiceComponent {
         this.itemsSelected.splice(index, 1);
       }
     }
+  }
+
+  multipleChoiceSaveClicked() {
+    console.log('>>> CLICKED');
   }
 }
