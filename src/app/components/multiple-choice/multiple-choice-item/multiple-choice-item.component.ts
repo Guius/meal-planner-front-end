@@ -21,6 +21,11 @@ export class MultipleChoiceItemComponent implements OnInit {
   }
 
   toggleItemSelected() {
+    // Don't allow toggling if the item is disabled
+    if (this.disabled) {
+      return;
+    }
+
     this.multipleChoiceItem.selected = !this.multipleChoiceItem.selected;
     this.sendUpdate();
   }

@@ -20,6 +20,7 @@ export class UserPreferencesComponent {
       id: '1',
       label: 'No specific diet',
       selected: false,
+      exclusive: true,
     },
     {
       id: '2',
@@ -44,4 +45,8 @@ export class UserPreferencesComponent {
   ];
 
   constructor(private userPreferencesService: UserPreferencesService) {}
+
+  saveDiets(selectedItems: MultipleChoiceItem[]) {
+    console.log('Going to save diets');
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { MultipleChoiceItemComponent } from './multiple-choice-item/multiple-choice-item.component';
@@ -19,10 +19,24 @@ import { FormButtonComponent } from '../form-button/form-button.component';
     FormButtonComponent,
   ],
 })
-export class MultipleChoiceComponent {
+export class MultipleChoiceComponent implements OnInit {
   @Input() items: MultipleChoiceItem[] = [];
+  @Output() multipleChoiceSaved = new EventEmitter<MultipleChoiceItem[]>();
 
   itemsSelected: MultipleChoiceItem[] = [];
+  exclusiveItemSelected = false;
+
+  ngOnInit() {
+    // Initialize itemsSelected with pre-selected items
+    this.itemsSelected = this.items.filter((item) => item.selected);
+
+    const exclusiveItemSelectedOnInit = this.items.find(
+      (x) => x.selected === true && x.exclusive === true
+    );
+    if (exclusiveItemSelectedOnInit !== undefined) {
+      this.exclusiveItemSelected = true;
+    }
+  }
 
   trackByItemId(index: number, item: MultipleChoiceItem): string {
     return item.id;
@@ -31,20 +45,45 @@ export class MultipleChoiceComponent {
   multipleChoiceItemUpdate(item: MultipleChoiceItem) {
     // Toggle the selected state of the item
     if (item.selected) {
-      // Add item to selected array if it's now selected
-      this.itemsSelected.push(item);
+      // If item being selected is exclusive
+      if (item.exclusive === true) {
+        // Deselect all other items
+        this.items.forEach((otherItem) => {
+          if (otherItem.id !== item.id) {
+            otherItem.selected = false;
+          }
+        });
+        // Clear itemsSelected array and add only the exclusive item
+        this.itemsSelected = [item];
+        this.exclusiveItemSelected = true;
+      } else {
+        // If non-exclusive item is being selected
+        // Only allow selection if no exclusive item is currently selected
+        if (!this.exclusiveItemSelected) {
+          this.itemsSelected.push(item);
+        } else {
+          // Prevent selection if exclusive item is selected
+          item.selected = false;
+          return;
+        }
+      }
     } else {
-      // Remove item from selected array if it's now unselected
+      // Item is being unselected
       const index = this.itemsSelected.findIndex(
         (selectedItem) => selectedItem.id === item.id
       );
       if (index > -1) {
         this.itemsSelected.splice(index, 1);
       }
+
+      // If item being unselected is exclusive, allow other selections
+      if (item.exclusive === true) {
+        this.exclusiveItemSelected = false;
+      }
     }
   }
 
   multipleChoiceSaveClicked() {
-    console.log('>>> CLICKED');
+    this.multipleChoiceSaved.emit(this.itemsSelected);
   }
 }
