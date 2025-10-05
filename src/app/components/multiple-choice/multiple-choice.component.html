@@ -11,6 +11,7 @@
       *ngFor="let item of items; trackBy: trackByItemId"
       [input]="item"
       [disabled]="exclusiveItemSelected && !item.selected"
+      [isLoading]="isLoading"
       (output)="multipleChoiceItemUpdate($event)"
     >
     </app-multiple-choice-item>

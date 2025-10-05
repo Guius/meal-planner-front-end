@@ -2,11 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserPreferencesService } from './user-preferences.service';
 import { AppHeaderComponent } from '../components/app-header/app-header.component';
 import { AppSubtitleComponent } from '../components/subtitle/subtitle.component';
-import {
-  IonContent,
-  IonSkeletonText,
-  ToastController,
-} from '@ionic/angular/standalone';
+import { IonContent, ToastController } from '@ionic/angular/standalone';
 import { SelectLabelComponent } from '../components/select-label/select-label.component';
 import { MultipleChoiceComponent } from '../components/multiple-choice/multiple-choice.component';
 import { MultipleChoiceItem } from '../components/multiple-choice/types';
@@ -21,13 +17,19 @@ import { CommonModule } from '@angular/common';
     AppHeaderComponent,
     IonContent,
     MultipleChoiceComponent,
-    IonSkeletonText,
     CommonModule,
   ],
 })
 export class UserPreferencesComponent implements OnInit {
   dietOptions: MultipleChoiceItem[] = [];
   isLoading = true;
+
+  // Skeleton items for loading state
+  skeletonItems: MultipleChoiceItem[] = [
+    { id: 'skeleton-1', label: '', selected: false },
+    { id: 'skeleton-2', label: '', selected: false },
+    { id: 'skeleton-3', label: '', selected: false },
+  ];
 
   constructor(
     private userPreferencesService: UserPreferencesService,
@@ -41,7 +43,7 @@ export class UserPreferencesComponent implements OnInit {
   loadDiets() {
     this.isLoading = true;
     this.userPreferencesService.getDiets().subscribe({
-      next: (response) => {
+      next: async (response) => {
         // Transform the response data to MultipleChoiceItem format
         this.dietOptions = [];
         this.dietOptions.push({

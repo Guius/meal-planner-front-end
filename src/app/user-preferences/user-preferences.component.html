@@ -1,31 +1,8 @@
 <app-header title="Meal Planner / User Preferences"></app-header>
 <ion-content>
-  <!-- Loading skeleton -->
-  <div *ngIf="isLoading" class="loading-skeleton">
-    <div class="skeleton-item">
-      <ion-skeleton-text
-        animated
-        style="width: 100%; height: 60px; border-radius: 8px"
-      ></ion-skeleton-text>
-    </div>
-    <div class="skeleton-item">
-      <ion-skeleton-text
-        animated
-        style="width: 100%; height: 60px; border-radius: 8px"
-      ></ion-skeleton-text>
-    </div>
-    <div class="skeleton-item">
-      <ion-skeleton-text
-        animated
-        style="width: 100%; height: 60px; border-radius: 8px"
-      ></ion-skeleton-text>
-    </div>
-  </div>
-
-  <!-- Diet options -->
   <app-multiple-choice
-    *ngIf="!isLoading"
-    [items]="dietOptions"
+    [items]="isLoading ? skeletonItems : dietOptions"
+    [isLoading]="isLoading"
     (multipleChoiceSaved)="saveDiets($event)"
     class="flex-1"
   >

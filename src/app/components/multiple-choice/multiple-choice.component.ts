@@ -21,6 +21,7 @@ import { FormButtonComponent } from '../form-button/form-button.component';
 })
 export class MultipleChoiceComponent implements OnInit {
   @Input() items: MultipleChoiceItem[] = [];
+  @Input() isLoading = false;
   @Output() multipleChoiceSaved = new EventEmitter<MultipleChoiceItem[]>();
 
   itemsSelected: MultipleChoiceItem[] = [];
@@ -84,6 +85,10 @@ export class MultipleChoiceComponent implements OnInit {
   }
 
   multipleChoiceSaveClicked() {
+    // Don't save when loading
+    if (this.isLoading) {
+      return;
+    }
     this.multipleChoiceSaved.emit(this.itemsSelected);
   }
 }
