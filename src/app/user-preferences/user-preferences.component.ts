@@ -42,16 +42,27 @@ export class UserPreferencesComponent implements OnInit {
     this.isLoading = true;
     this.userPreferencesService.getDiets().subscribe({
       next: (response) => {
-        console.log('getting diets.', response);
         // Transform the response data to MultipleChoiceItem format
-        this.dietOptions = response.data.map((diet: any, index: number) => ({
-          id: diet.id || (index + 1).toString(),
-          label: diet.name || diet.label,
+        this.dietOptions = [];
+        this.dietOptions.push({
+          id: '1',
+          label: 'No specific diet',
           selected: false,
-          exclusive:
-            diet.name === 'No specific diet' ||
-            diet.label === 'No specific diet',
-        }));
+          exclusive: true,
+        });
+
+        const dietsFromBackend = response.data.map(
+          (diet: any, index: number) => ({
+            id: diet.id || (index + 1).toString(),
+            label: diet.name || diet.label,
+            selected: false,
+            exclusive:
+              diet.name === 'No specific diet' ||
+              diet.label === 'No specific diet',
+          })
+        );
+
+        this.dietOptions = this.dietOptions.concat(dietsFromBackend);
         this.isLoading = false;
       },
       error: (error) => {
@@ -62,8 +73,6 @@ export class UserPreferencesComponent implements OnInit {
           'Failed to load diets. Please try again.',
           'error'
         );
-        // Fallback to default options
-        this.setDefaultDietOptions();
       },
     });
   }
