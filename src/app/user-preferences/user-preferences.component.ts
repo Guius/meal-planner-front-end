@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { UserPreferencesService } from './user-preferences.service';
+import {
+  UserPreferencesService,
+  CookDietDto,
+} from './user-preferences.service';
 import { AppHeaderComponent } from '../components/app-header/app-header.component';
 import { AppSubtitleComponent } from '../components/subtitle/subtitle.component';
 import { IonContent, ToastController } from '@ionic/angular/standalone';
@@ -42,8 +45,10 @@ export class UserPreferencesComponent implements OnInit {
 
   loadDiets() {
     this.isLoading = true;
+
+    // First, get all available diets
     this.userPreferencesService.getDiets().subscribe({
-      next: async (response) => {
+      next: (dietsResponse) => {
         // Transform the response data to MultipleChoiceItem format
         this.dietOptions = [];
         this.dietOptions.push({
@@ -53,7 +58,7 @@ export class UserPreferencesComponent implements OnInit {
           exclusive: true,
         });
 
-        const dietsFromBackend = response.data.map(
+        const dietsFromBackend = dietsResponse.data.map(
           (diet: any, index: number) => ({
             id: diet.id || (index + 1).toString(),
             label: diet.name || diet.label,
@@ -65,7 +70,18 @@ export class UserPreferencesComponent implements OnInit {
         );
 
         this.dietOptions = this.dietOptions.concat(dietsFromBackend);
-        this.isLoading = false;
+
+        // Now fetch user's selected diets
+        this.userPreferencesService.getMyDiets().subscribe({
+          next: (myDietsResponse) => {
+            this.handleMyDietsResponse(myDietsResponse);
+            this.isLoading = false;
+          },
+          error: (error) => {
+            this.handleMyDietsError(error);
+            this.isLoading = false;
+          },
+        });
       },
       error: (error) => {
         console.error('Error fetching diets:', error);
@@ -79,35 +95,48 @@ export class UserPreferencesComponent implements OnInit {
     });
   }
 
-  setDefaultDietOptions() {
-    this.dietOptions = [
-      {
-        id: '1',
-        label: 'No specific diet',
-        selected: false,
-        exclusive: true,
-      },
-      {
-        id: '2',
-        label: 'Vegetarian',
-        selected: false,
-      },
-      {
-        id: '3',
-        label: 'Vegan',
-        selected: false,
-      },
-      {
-        id: '4',
-        label: 'Keto',
-        selected: false,
-      },
-      {
-        id: '5',
-        label: 'Mediterranean',
-        selected: false,
-      },
-    ];
+  private handleMyDietsResponse(myDietsResponse: any) {
+    if (myDietsResponse.data.length === 0) {
+      // User has chosen diets but has no specific diet
+      // Mark "No specific diet" as selected
+      const noSpecificDiet = this.dietOptions.find(
+        (diet) => diet.label === 'No specific diet'
+      );
+      if (noSpecificDiet) {
+        noSpecificDiet.selected = true;
+      }
+    } else {
+      // Mark selected diets based on IDs
+      myDietsResponse.data.forEach((selectedDiet: CookDietDto) => {
+        const dietOption = this.dietOptions.find(
+          (diet) => diet.id === selectedDiet.id
+        );
+        if (dietOption) {
+          dietOption.selected = true;
+        }
+      });
+    }
+  }
+
+  private handleMyDietsError(error: any) {
+    console.error('Error fetching my diets:', error);
+
+    // Check if it's a NotFoundException (404)
+    if (
+      error.status === 404 ||
+      (error.message && error.message.includes('404'))
+    ) {
+      // User has not yet chosen diets - this is normal, don't show error toast
+      // Just leave all options unselected
+      return;
+    }
+
+    // For other errors, show error toast
+    this.presentToast(
+      'bottom',
+      'Failed to load your diet preferences. Please try again.',
+      'error'
+    );
   }
 
   saveDiets(selectedItems: MultipleChoiceItem[]) {

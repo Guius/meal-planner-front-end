@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { MultipleChoiceItemComponent } from './multiple-choice-item/multiple-choice-item.component';
@@ -19,25 +19,34 @@ import { FormButtonComponent } from '../form-button/form-button.component';
     FormButtonComponent,
   ],
 })
-export class MultipleChoiceComponent implements OnInit {
-  @Input() items: MultipleChoiceItem[] = [];
+export class MultipleChoiceComponent {
+  private _items: MultipleChoiceItem[] = [];
+
+  @Input() set items(value: MultipleChoiceItem[]) {
+    this._items = value;
+    console.log('New items received:', value);
+
+    // Initialize itemsSelected with pre-selected items
+    this.itemsSelected = this._items.filter((item) => item.selected);
+
+    const exclusiveItemSelectedOnInit = this._items.find(
+      (x) => x.selected === true && x.exclusive === true
+    );
+    if (exclusiveItemSelectedOnInit !== undefined) {
+      this.exclusiveItemSelected = true;
+    } else {
+      this.exclusiveItemSelected = false;
+    }
+  }
+
+  get items() {
+    return this._items;
+  }
   @Input() isLoading = false;
   @Output() multipleChoiceSaved = new EventEmitter<MultipleChoiceItem[]>();
 
   itemsSelected: MultipleChoiceItem[] = [];
   exclusiveItemSelected = false;
-
-  ngOnInit() {
-    // Initialize itemsSelected with pre-selected items
-    this.itemsSelected = this.items.filter((item) => item.selected);
-
-    const exclusiveItemSelectedOnInit = this.items.find(
-      (x) => x.selected === true && x.exclusive === true
-    );
-    if (exclusiveItemSelectedOnInit !== undefined) {
-      this.exclusiveItemSelected = true;
-    }
-  }
 
   trackByItemId(index: number, item: MultipleChoiceItem): string {
     return item.id;
