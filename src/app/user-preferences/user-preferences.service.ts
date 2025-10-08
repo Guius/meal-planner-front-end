@@ -74,6 +74,28 @@ export class UserPreferencesService {
     );
   }
 
+  // Update user's selected diets
+  updateMyDiets(dietIds: string[]): Observable<any> {
+    return from(
+      fetch(`${environment.mealPlannerUrl}/diet/my-diets`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ dietIds }),
+      }).then((response) => {
+        if (!response.ok) {
+          // Create error with status code for better error handling
+          const error = new Error(`HTTP error! status: ${response.status}`);
+          (error as any).status = response.status;
+          throw error;
+        }
+        return response.json();
+      })
+    );
+  }
+
   // Example method - you can add your user preferences logic here
   getUserPreferences(): Observable<any> {
     return of({

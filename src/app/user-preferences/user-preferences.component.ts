@@ -141,6 +141,28 @@ export class UserPreferencesComponent implements OnInit {
 
   saveDiets(selectedItems: MultipleChoiceItem[]) {
     console.log('Going to save diets', selectedItems);
+
+    // Extract diet IDs from selected items, excluding "No specific diet" option
+    const dietIds = selectedItems
+      .filter((item) => item.label !== 'No specific diet' && item.id !== '1')
+      .map((item) => item.id);
+
+    console.log('Diet IDs to save:', dietIds);
+
+    this.userPreferencesService.updateMyDiets(dietIds).subscribe({
+      next: (response) => {
+        console.log('Diets saved successfully:', response);
+        this.presentToast(
+          'bottom',
+          'Diet preferences saved successfully!',
+          'success'
+        );
+      },
+      error: (error) => {
+        console.error('Error saving diets:', error);
+        this.presentToast('bottom', 'Something went wrong', 'error');
+      },
+    });
   }
 
   async presentToast(
