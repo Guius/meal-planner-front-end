@@ -1,57 +1,46 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title> Platform Detection Demo </ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- Mobile Layout -->
+<div *ngIf="isMobile" class="mobile-layout">
+  <p class="platform-message mobile">I'm on mobile</p>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Mobile Experience</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      This content is specifically designed for mobile devices. The layout is
+      optimized for touch interactions and smaller screens.
+    </ion-card-content>
+  </ion-card>
+</div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Platform Detection</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <!-- Platform-specific content using *ngIf -->
-  <div class="platform-demo">
-    <!-- Mobile Layout -->
-    <div *ngIf="isMobile" class="mobile-layout">
-      <p class="platform-message mobile">I'm on mobile</p>
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>Mobile Experience</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          This content is specifically designed for mobile devices. The layout
-          is optimized for touch interactions and smaller screens.
-        </ion-card-content>
-      </ion-card>
+<!-- Desktop Layout -->
+<div *ngIf="isDesktop" class="desktop-layout">
+  <app-header title="Meal Planner / Palette"></app-header>
+  <ion-content>
+    <div class="flex justify-between items-center">
+      <app-subtitle subtitle="Build your menu"></app-subtitle>
+      <app-form-button text="View your selection"></app-form-button>
     </div>
+    <section class="mt-16 w-full">
+      <div class="flex justify-center w-full">
+        <app-select-label
+          align="centre"
+          label="Select your recipes"
+          class="w-1/2"
+        ></app-select-label>
+      </div>
+    </section>
+  </ion-content>
+</div>
 
-    <!-- Desktop Layout -->
-    <div *ngIf="isDesktop" class="desktop-layout">
-      <p class="platform-message desktop">I'm on desktop</p>
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>Desktop Experience</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          This content is specifically designed for desktop devices. The layout
-          takes advantage of larger screens and mouse interactions.
-        </ion-card-content>
-      </ion-card>
-    </div>
-
-    <!-- Fallback for other platforms -->
-    <div *ngIf="!isMobile && !isDesktop" class="unknown-layout">
-      <p class="platform-message unknown">Platform unknown</p>
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>Unknown Platform</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          This is a fallback layout for unrecognized platforms.
-        </ion-card-content>
-      </ion-card>
-    </div>
-  </div>
-</ion-content>
+<!-- Fallback for other platforms -->
+<div *ngIf="!isMobile && !isDesktop" class="unknown-layout">
+  <p class="platform-message unknown">Platform unknown</p>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Unknown Platform</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      This is a fallback layout for unrecognized platforms.
+    </ion-card-content>
+  </ion-card>
+</div>

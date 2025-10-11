@@ -1,11 +1,9 @@
 <div class="flex flex-col">
-  <div>
-    <app-select-label
-      label="Please select your diet"
-      align="left"
-      class="flex-none"
-    ></app-select-label>
-  </div>
+  <app-select-label
+    label="Please select your diet"
+    align="left"
+    class="w-1/2"
+  ></app-select-label>
   <div class="h-32 flex flex-wrap mt-10">
     <app-multiple-choice-item
       *ngFor="let item of items; trackBy: trackByItemId"

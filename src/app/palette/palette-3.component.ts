@@ -16,6 +16,10 @@ import {
   IonCardContent,
   IonCard,
 } from '@ionic/angular/standalone';
+import { AppHeaderComponent } from '../components/app-header/app-header.component';
+import { AppSubtitleComponent } from '../components/subtitle/subtitle.component';
+import { FormButtonComponent } from '../components/form-button/form-button.component';
+import { SelectLabelComponent } from '../components/select-label/select-label.component';
 
 @Component({
   selector: 'app-palette-3',
@@ -32,6 +36,10 @@ import {
     IonCardTitle,
     IonCardContent,
     IonCard,
+    AppHeaderComponent,
+    AppSubtitleComponent,
+    FormButtonComponent,
+    SelectLabelComponent,
   ],
   providers: [PaletteService],
 })
