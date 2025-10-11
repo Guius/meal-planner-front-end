@@ -11,9 +11,9 @@ import { UnifiedRecipe } from 'src/app/core/types/unified-recipe.type';
 export class RecipeCardComponent {
   @Input() recipe!: UnifiedRecipe;
 
-  @Output() clicked = new EventEmitter<void>();
+  @Output() clicked = new EventEmitter<UnifiedRecipe>();
 
   buttonClicked() {
-    this.clicked.emit();
+    this.clicked.emit(this.recipe);
   }
 }
