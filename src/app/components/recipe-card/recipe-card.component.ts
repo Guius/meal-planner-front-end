@@ -8,7 +8,7 @@ import { UnifiedRecipe } from 'src/app/core/types/unified-recipe.type';
   standalone: true,
   imports: [IonicModule],
 })
-export class FormButtonComponent {
+export class RecipeCardComponent {
   @Input() recipe!: UnifiedRecipe;
 
   @Output() clicked = new EventEmitter<void>();

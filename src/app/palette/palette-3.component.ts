@@ -20,6 +20,7 @@ import { AppHeaderComponent } from '../components/app-header/app-header.componen
 import { AppSubtitleComponent } from '../components/subtitle/subtitle.component';
 import { FormButtonComponent } from '../components/form-button/form-button.component';
 import { SelectLabelComponent } from '../components/select-label/select-label.component';
+import { RecipeCardComponent } from '../components/recipe-card/recipe-card.component';
 
 @Component({
   selector: 'app-palette-3',
@@ -40,6 +41,7 @@ import { SelectLabelComponent } from '../components/select-label/select-label.co
     AppSubtitleComponent,
     FormButtonComponent,
     SelectLabelComponent,
+    RecipeCardComponent,
   ],
   providers: [PaletteService],
 })

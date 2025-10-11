@@ -15,6 +15,10 @@ module.exports = {
       borderColor: {
         "content-text-grey": "#D0D0D0",
       },
+      backgroundColor: {
+        red: "#F7AA8F",
+        yellow: "#FEFAF4",
+      },
       fontFamily: {
         kalam: ["Kalam", "cursive"],
         ubunutu_sans_mono: ["Ubuntu Sans Mono", "monospace"],
