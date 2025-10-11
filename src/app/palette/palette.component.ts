@@ -16,7 +16,6 @@ import {
   RecipeOfPalette,
 } from './random-recipe.dto';
 import { LoggerModule, NGXLogger } from 'ngx-logger';
-import { HttpClientModule } from '@angular/common/http';
 import {
   IonCard,
   IonCardContent,
@@ -76,7 +75,6 @@ export interface IngredientInformation {
     IonSpinner,
     IonFooter,
     IonSkeletonText,
-    HttpClientModule,
     CommonModule,
     FormsModule,
   ],
@@ -155,107 +153,103 @@ export class PaletteComponent implements OnInit, AfterViewInit {
   /**
    * Used when user refreshes selection or when page is first loaded.
    */
-  getFullSetOfRandomRecipes(numberOfRecipes: number) {
+  async getFullSetOfRandomRecipes(numberOfRecipes: number): Promise<void> {
     console.log(`getting ${numberOfRecipes} recipes from back end`);
-    this.service
-      .getRandomRecipes(
+
+    try {
+      const data = await this.service.getRandomRecipes(
         numberOfRecipes,
         this.paletteRecipes.map((r) => r.recipe.id),
         this.basketRecipes.map((r) => r.recipe.id)
-      )
-      .subscribe({
-        next: (data) => {
-          console.info(data);
-          this.rawRecipes = data;
-          this.paletteRecipes = data.map((val) => {
-            return {
-              recipe: val,
-              locked: false,
-            };
-          });
+      );
 
-          // get the final ingredients list
-          this.finalIngredients = {};
-          /**
-           * First create an object whose keys is every ingredient id.
-           * If that key already exists, then add the amounts together
-           */
-          for (
-            let recipeNumber = 0;
-            recipeNumber < this.paletteRecipes.length;
-            recipeNumber++
-          ) {
-            const recipe = this.paletteRecipes[recipeNumber];
-            const ingredients = recipe.recipe.recipeIngredient;
-
-            for (let i = 0; i < ingredients.length; i++) {
-              const ingredient = ingredients[i];
-              const amount = ingredient.amount;
-              const unit = ingredient.unit;
-              const name = ingredient.name;
-              const id = ingredient.ingredientId;
-
-              if (this.finalIngredients[id]) {
-                const existingAmount = parseFloat(
-                  this.finalIngredients[id].amount
-                );
-                const newAmount = parseFloat(amount);
-
-                this.finalIngredients[id].amount = (
-                  existingAmount + newAmount
-                ).toString();
-              } else {
-                this.finalIngredients[id] = {
-                  amount: amount,
-                  unit: unit,
-                  name: name,
-                };
-              }
-            }
-          }
-
-          // now make the object into an array so that the front end can easily show it
-          /**
-           * applies filter to an array made up the ingredients dictionary
-           */
-          this.simplifiedIngredientsList = this.applyFiltersToIngredientNames(
-            Object.values(this.finalIngredients).map((val) => {
-              return `${val.name} - ${val.amount} ${val.unit}`;
-            })
-          );
-
-          this.recipesLoaded = true;
-        },
-        error: async (err) => {
-          await this.presentToast('bottom', 'Error loading recipes', 'error');
-          this.recipesLoaded = true;
-        },
+      console.info(data);
+      this.rawRecipes = data;
+      this.paletteRecipes = data.map((val) => {
+        return {
+          recipe: val,
+          locked: false,
+        };
       });
+
+      // get the final ingredients list
+      this.finalIngredients = {};
+      /**
+       * First create an object whose keys is every ingredient id.
+       * If that key already exists, then add the amounts together
+       */
+      for (
+        let recipeNumber = 0;
+        recipeNumber < this.paletteRecipes.length;
+        recipeNumber++
+      ) {
+        const recipe = this.paletteRecipes[recipeNumber];
+        const ingredients = recipe.recipe.recipeIngredient;
+
+        for (let i = 0; i < ingredients.length; i++) {
+          const ingredient = ingredients[i];
+          const amount = ingredient.amount;
+          const unit = ingredient.unit;
+          const name = ingredient.name;
+          const id = ingredient.ingredientId;
+
+          if (this.finalIngredients[id]) {
+            const existingAmount = parseFloat(this.finalIngredients[id].amount);
+            const newAmount = parseFloat(amount);
+
+            this.finalIngredients[id].amount = (
+              existingAmount + newAmount
+            ).toString();
+          } else {
+            this.finalIngredients[id] = {
+              amount: amount,
+              unit: unit,
+              name: name,
+            };
+          }
+        }
+      }
+
+      // now make the object into an array so that the front end can easily show it
+      /**
+       * applies filter to an array made up the ingredients dictionary
+       */
+      this.simplifiedIngredientsList = this.applyFiltersToIngredientNames(
+        Object.values(this.finalIngredients).map((val) => {
+          return `${val.name} - ${val.amount} ${val.unit}`;
+        })
+      );
+
+      this.recipesLoaded = true;
+    } catch (err) {
+      console.error('Error loading recipes:', err);
+      await this.presentToast('bottom', 'Error loading recipes', 'error');
+      this.recipesLoaded = true;
+      this.errorLoadingRecipes = true;
+    }
   }
 
-  async sendRecipesByEmail() {
+  async sendRecipesByEmail(): Promise<void> {
     this.isSendingEmail = true;
+
     if (this.rawRecipes.length === 0) {
       await this.presentToast('bottom', 'No recipes to send!', 'warning');
+      this.isSendingEmail = false;
+      return;
     }
 
-    this.service
-      .sendRecipesToEmail(this.rawRecipes, this.simplifiedIngredientsList)
-      .subscribe({
-        next: async () => {
-          await this.presentToast('bottom', 'Email sent!', 'success');
-          this.isSendingEmail = false;
-        },
-        error: async () => {
-          await this.presentToast(
-            'bottom',
-            'Email could not be sent!',
-            'error'
-          );
-
-          this.isSendingEmail = false;
-        },
-      });
+    try {
+      await this.service.sendRecipesToEmail(
+        this.rawRecipes,
+        this.simplifiedIngredientsList
+      );
+      await this.presentToast('bottom', 'Email sent!', 'success');
+      this.isSendingEmail = false;
+    } catch (err) {
+      console.error('Error sending email:', err);
+      await this.presentToast('bottom', 'Email could not be sent!', 'error');
+      this.isSendingEmail = false;
+    }
   }
 
   prettifyRecipeName(name: string): string {

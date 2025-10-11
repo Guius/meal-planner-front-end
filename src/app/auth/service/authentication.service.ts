@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { plainToInstance } from 'class-transformer';
 import { environment } from 'src/environments/environment';
 import { NGXLogger } from 'ngx-logger';
@@ -15,10 +13,9 @@ export class AuthenticationService {
 
   /**
    *
-   * @param {HttpClient} _http
-   * @param {ToastrService} _toastrService
+   * @param {NGXLogger} logger
    */
-  constructor(private http: HttpClient, private logger: NGXLogger) {
+  constructor(private logger: NGXLogger) {
     this.loginStateChange = new BehaviorSubject(this.loggedIn);
   }
 
@@ -99,48 +96,72 @@ export class AuthenticationService {
   /**
    * Description
    * -
-   * - Uses the angular httpClient to make a call to the login endpoint of the user api
-   * - withCredentials set to true indicates whether or not cross-site Access-Control requests should be made using credentials such as cookies, authorization headers
+   * - Uses the native fetch API to make a call to the login endpoint of the user api
+   * - credentials set to 'include' indicates whether or not cross-site Access-Control requests should be made using credentials such as cookies, authorization headers
    * - on success, the AuthInfo is set and a timer starts which refreshes the auth token periodically
    * @param {string} email
    * @param {string} password
-   * @returns {Observable} an observable of a user
+   * @returns {Promise} a promise that resolves when login is complete
    */
-  login(email: string, password: string) {
-    return this.http
-      .post<AuthInfo>(
-        `${environment.userApi}/auth/login`,
-        {
+  async login(email: string, password: string): Promise<void> {
+    try {
+      const response = await fetch(`${environment.userApi}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
           email,
           password,
-        },
-        {
-          withCredentials: true,
+        }),
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          // Try to get the error message from the response
+          try {
+            const errorData = await response.json();
+            if (errorData.message === 'INVALIDCREDENTIALS') {
+              throw new Error('Invalid credentials');
+            }
+          } catch {
+            // If we can't parse the response, just throw a generic 401 error
+          }
+          throw new Error('HTTP error! status: 401');
         }
-      )
-      .pipe(
-        map((authInfo) => {
-          this.setPropertiesFromAuthInfo(authInfo);
-        })
-      );
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const authInfo: AuthInfo = await response.json();
+      this.setPropertiesFromAuthInfo(authInfo);
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
    * This method refreshes the auth token by using the refresh tokens (which are in cookies).
-   * On success, it sets the auth inof marks the user as logged in, and sets a timer to preiodically refresh
+   * On success, it sets the auth info marks the user as logged in, and sets a timer to periodically refresh
    * the auth token
-   * @returns An Observable which returns AuthInfo to the caller
+   * @returns A Promise which resolves when refresh is complete
    */
-  refreshLogin() {
-    return this.http
-      .get<AuthInfo>(`${environment.userApi}/auth/refresh`, {
-        withCredentials: true,
-      })
-      .pipe(
-        map((authInfo) => {
-          this.setPropertiesFromAuthInfo(authInfo);
-        })
-      );
+  async refreshLogin(): Promise<void> {
+    try {
+      const response = await fetch(`${environment.userApi}/auth/refresh`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const authInfo: AuthInfo = await response.json();
+      this.setPropertiesFromAuthInfo(authInfo);
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
@@ -155,17 +176,20 @@ export class AuthenticationService {
 
   /**
    * This calls an endpoint which removes all the cookies from the client.
-   * It the wipes out the AuthInfo and stops the refresh timer
+   * It then wipes out the AuthInfo and stops the refresh timer
    */
-  logout() {
-    this.http
-      .get(`${environment.userApi}/auth/logout`, {
-        withCredentials: true,
-        responseType: 'text',
-      })
-      .subscribe();
-    this.authInfo = undefined;
+  async logout(): Promise<void> {
+    try {
+      await fetch(`${environment.userApi}/auth/logout`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+    } catch (error) {
+      // Continue with cleanup even if logout request fails
+      this.logger.error('Logout request failed:', error);
+    }
 
+    this.authInfo = undefined;
     localStorage.removeItem('user');
     localStorage.removeItem('chargeSessionHistory');
     this.stopRefreshTokenTimer();
@@ -215,15 +239,13 @@ export class AuthenticationService {
       ).toISOString()} (in ${halfWayBetweenNowAndExpiryMs} seconds)`
     );
 
-    this.refreshTokenTimeout = setTimeout(
-      () =>
-        this.refreshLogin().subscribe({
-          error: () => {
-            this.processRefreshTokenTimer();
-          },
-        }),
-      halfWayBetweenNowAndExpiryMs
-    );
+    this.refreshTokenTimeout = setTimeout(async () => {
+      try {
+        await this.refreshLogin();
+      } catch (error) {
+        this.processRefreshTokenTimer();
+      }
+    }, halfWayBetweenNowAndExpiryMs);
   }
 
   private stopRefreshTokenTimer() {

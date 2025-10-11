@@ -1,59 +1,88 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Diet, RandomRecipeDto } from './random-recipe.dto';
 
 @Injectable()
 export class PaletteService {
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
-  getRandomRecipes(
+  async getRandomRecipes(
     numberOfRecipes: number,
     recipesIdsOfPalette: string[],
     recipeIdsOfBasket: string[]
-  ): Observable<RandomRecipeDto[]> {
+  ): Promise<RandomRecipeDto[]> {
     // return of(fakePalette);
 
-    return this.http.get<RandomRecipeDto[]>(
-      `${environment.mealPlannerUrl}/meal-planner/random-recipes`,
+    const params = new URLSearchParams({
+      recipesInBasket: recipeIdsOfBasket.join(','),
+      recipesInPalette: recipesIdsOfPalette.join(','),
+      numberOfRecipes: numberOfRecipes.toString(),
+    });
+
+    const response = await fetch(
+      `${environment.mealPlannerUrl}/meal-planner/random-recipes?${params}`,
       {
-        params: {
-          recipesInBasket: recipeIdsOfBasket,
-          recipesInPalette: recipesIdsOfPalette,
-          numberOfRecipes: numberOfRecipes,
-        },
-        withCredentials: true,
+        method: 'GET',
+        credentials: 'include',
       }
     );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return response.json();
   }
 
-  getRandomRecipe(
+  async getRandomRecipe(
     recipesIdsOfPalette: string[],
     recipeIdsOfBasket: string[]
-  ): Observable<RandomRecipeDto> {
+  ): Promise<RandomRecipeDto> {
     // return of(fakePalette);
 
-    return this.http.get<RandomRecipeDto>(
-      `${environment.mealPlannerUrl}/meal-planner/random-recipe`,
+    const params = new URLSearchParams({
+      recipesInBasket: recipeIdsOfBasket.join(','),
+      recipesInPalette: recipesIdsOfPalette.join(','),
+    });
+
+    const response = await fetch(
+      `${environment.mealPlannerUrl}/meal-planner/random-recipe?${params}`,
       {
-        params: {
-          recipesInBasket: recipeIdsOfBasket,
-          recipesInPalette: recipesIdsOfPalette,
-        },
-        withCredentials: true,
+        method: 'GET',
+        credentials: 'include',
       }
     );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return response.json();
   }
 
-  sendRecipesToEmail(
+  async sendRecipesToEmail(
     selectedRecipes: RandomRecipeDto[],
     ingredientsList: string[]
-  ) {
-    return this.http.post(
+  ): Promise<any> {
+    const response = await fetch(
       `${environment.mealPlannerUrl}/meal-planner/send-recipes-in-email`,
-      { randomRecipes: selectedRecipes, ingredientsList: ingredientsList },
-      { withCredentials: true }
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          randomRecipes: selectedRecipes,
+          ingredientsList: ingredientsList,
+        }),
+      }
     );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return response.json();
   }
 }

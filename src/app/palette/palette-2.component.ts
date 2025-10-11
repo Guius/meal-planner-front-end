@@ -73,27 +73,25 @@ export class Palette2Component implements OnInit {
    * Gets 5 recipes from the back end and replaces the palette recipes with those
    * These recipes are different recipes from what is currently in the palette and the basket
    */
-  fullPaletteRefresh() {
+  async fullPaletteRefresh(): Promise<void> {
     this.recipesLoaded = false;
-    this.service
-      .getRandomRecipes(
+
+    try {
+      const data = await this.service.getRandomRecipes(
         5,
         this.paletteRecipes.map((r) => r.id),
         this.basketRecipes.map((r) => r.id)
-      )
-      .subscribe({
-        next: (data: RandomRecipeDto[]) => {
-          console.log('Full palette data:');
-          console.log(data);
-          this.paletteRecipes = data.map((r) => this.createUnifiedRecipe(r));
-          this.recipesLoaded = true;
-        },
-        error: (error) => {
-          console.error('Error loading recipes:', error);
-          this.recipesLoaded = true;
-          this.presentToast('bottom', 'Failed to load recipes!', 'error');
-        },
-      });
+      );
+
+      console.log('Full palette data:');
+      console.log(data);
+      this.paletteRecipes = data.map((r) => this.createUnifiedRecipe(r));
+      this.recipesLoaded = true;
+    } catch (error) {
+      console.error('Error loading recipes:', error);
+      this.recipesLoaded = true;
+      await this.presentToast('bottom', 'Failed to load recipes!', 'error');
+    }
   }
 
   /**
@@ -123,48 +121,44 @@ export class Palette2Component implements OnInit {
       return;
     }
 
-    this.service
-      .getRandomRecipe(
+    try {
+      const data = await this.service.getRandomRecipe(
         this.paletteRecipes.map((r) => r.id),
         this.basketRecipes.map((r) => r.id)
-      )
-      .subscribe({
-        next: (data: RandomRecipeDto) => {
-          console.log('NEW RECIPE DATA:');
-          console.log(data);
-          const newPaletteRecipe: UnifiedRecipe =
-            this.createUnifiedRecipe(data);
+      );
 
-          // Add the selected recipe to basket
-          this.basketRecipes.push(paletteRecipe);
+      console.log('NEW RECIPE DATA:');
+      console.log(data);
+      const newPaletteRecipe: UnifiedRecipe = this.createUnifiedRecipe(data);
 
-          // Replace the palette recipe with the new one
-          this.paletteRecipes[indexOfRecipeInPalette] = newPaletteRecipe;
+      // Add the selected recipe to basket
+      this.basketRecipes.push(paletteRecipe);
 
-          // Update the basket ingredients list
-          this.updateBasketIngredientsList();
+      // Replace the palette recipe with the new one
+      this.paletteRecipes[indexOfRecipeInPalette] = newPaletteRecipe;
 
-          // Show success message
-          this.presentToast('bottom', 'Recipe added to basket!', 'success');
-        },
-        error: (error) => {
-          console.error('Error getting new recipe:', error);
-          this.presentToast('bottom', 'Failed to get new recipe!', 'error');
-        },
-      });
+      // Update the basket ingredients list
+      this.updateBasketIngredientsList();
+
+      // Show success message
+      await this.presentToast('bottom', 'Recipe added to basket!', 'success');
+    } catch (error) {
+      console.error('Error getting new recipe:', error);
+      await this.presentToast('bottom', 'Failed to get new recipe!', 'error');
+    }
   }
 
   /**
    * Removes a recipe from the basket
    */
-  removeRecipeFromBasket(basketRecipe: UnifiedRecipe) {
+  async removeRecipeFromBasket(basketRecipe: UnifiedRecipe): Promise<void> {
     const indexOfRecipeInBasket = this.basketRecipes.findIndex(
       (recipe) => recipe.id === basketRecipe.id
     );
 
     if (indexOfRecipeInBasket === -1) {
       console.error('Could not find recipe in basket to remove');
-      this.presentToast('bottom', 'Recipe not found in basket!', 'error');
+      await this.presentToast('bottom', 'Recipe not found in basket!', 'error');
       return;
     }
 
@@ -173,15 +167,19 @@ export class Palette2Component implements OnInit {
     // Update the basket ingredients list
     this.updateBasketIngredientsList();
 
-    this.presentToast('bottom', 'Recipe removed from basket!', 'success');
+    await this.presentToast('bottom', 'Recipe removed from basket!', 'success');
   }
 
   /**
    * Sends the selected recipes from basket to email
    */
-  sendBasketRecipesToEmail() {
+  async sendBasketRecipesToEmail(): Promise<void> {
     if (this.basketRecipes.length === 0) {
-      this.presentToast('bottom', 'No recipes in basket to send!', 'warning');
+      await this.presentToast(
+        'bottom',
+        'No recipes in basket to send!',
+        'warning'
+      );
       return;
     }
 
@@ -192,27 +190,26 @@ export class Palette2Component implements OnInit {
       (recipe) => recipe.fullRecipe
     );
 
-    this.service
-      .sendRecipesToEmail(selectedRecipes, this.basketIngredientsList)
-      .subscribe({
-        next: () => {
-          this.isSendingEmail = false;
-          this.presentToast(
-            'bottom',
-            'Recipes sent to email successfully!',
-            'success'
-          );
-        },
-        error: (error) => {
-          this.isSendingEmail = false;
-          console.error('Error sending recipes to email:', error);
-          this.presentToast(
-            'bottom',
-            'Failed to send recipes to email!',
-            'error'
-          );
-        },
-      });
+    try {
+      await this.service.sendRecipesToEmail(
+        selectedRecipes,
+        this.basketIngredientsList
+      );
+      this.isSendingEmail = false;
+      await this.presentToast(
+        'bottom',
+        'Recipes sent to email successfully!',
+        'success'
+      );
+    } catch (error) {
+      this.isSendingEmail = false;
+      console.error('Error sending recipes to email:', error);
+      await this.presentToast(
+        'bottom',
+        'Failed to send recipes to email!',
+        'error'
+      );
+    }
   }
 
   /**
