@@ -41,6 +41,19 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 // @import "@ionic/angular/css/palettes/dark.system.css";
 
+/* Force light mode - disable dark mode completely */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: light;
+  }
+}
+
+/* Ensure no dark mode classes take effect */
+body.dark,
+.dark {
+  color-scheme: light !important;
+}
+
 /* App Color Palette */
 :root {
   --app-background-light: #f5f5f5;

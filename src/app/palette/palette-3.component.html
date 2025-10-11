@@ -20,7 +20,7 @@
       <app-subtitle subtitle="Build your menu"></app-subtitle>
       <app-form-button text="View your selection"></app-form-button>
     </div>
-    <section class="pt-16 w-full h-3/5">
+    <section class="pt-16 w-full h-3/5 flex flex-col">
       <div class="flex justify-center w-full">
         <app-select-label
           align="centre"
@@ -28,8 +28,14 @@
           class="w-1/2"
         ></app-select-label>
       </div>
-      <div>
-        <app-recipe-card [recipe]="paletteRecipes[0]"></app-recipe-card>
+      <div class="grow flex flex-col justify-center">
+        <div class="flex gap-10 overflow-x-auto justify-center">
+          <app-recipe-card
+            *ngFor="let recipe of paletteRecipes; let i = index"
+            [recipe]="recipe"
+            class="mb-5"
+          ></app-recipe-card>
+        </div>
       </div>
     </section>
     <section class="pt-16 w-full h-2/6">
