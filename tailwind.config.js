@@ -18,6 +18,7 @@ module.exports = {
       backgroundColor: {
         red: "#F7AA8F",
         yellow: "#FEFAF4",
+        app_grey: "#f5f5f5",
       },
       fontFamily: {
         kalam: ["Kalam", "cursive"],

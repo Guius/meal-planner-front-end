@@ -48,6 +48,10 @@
   }
 }
 
+body {
+  background-color: var(--app-background-light);
+}
+
 /* Ensure no dark mode classes take effect */
 body.dark,
 .dark {
