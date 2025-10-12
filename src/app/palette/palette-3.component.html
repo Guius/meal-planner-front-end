@@ -20,22 +20,22 @@
       <app-subtitle subtitle="Build your menu"></app-subtitle>
       <app-form-button text="View your selection"></app-form-button>
     </section>
-    <section class="w-full flex flex-col flex-[4]">
-      <div class="flex justify-center w-full py-5">
+    <section class="w-full flex-[4] flex flex-col max-h-[600px]">
+      <div class="flex justify-center w-full py-5 flex-none">
         <app-select-label
           align="centre"
           label="Select your recipes"
           class="w-1/2"
         ></app-select-label>
       </div>
-      <div class="grow flex flex-col justify-center">
-        <div class="flex gap-10 overflow-x-scroll justify-start">
-          <app-recipe-card
-            *ngFor="let recipe of paletteRecipes; let i = index"
-            [recipe]="recipe"
-            class="pb-5"
-          ></app-recipe-card>
-        </div>
+      <div
+        class="flex gap-10 overflow-x-auto flex-1 py-5"
+        style="justify-content: safe center"
+      >
+        <app-recipe-card
+          *ngFor="let recipe of paletteRecipes; let i = index"
+          [recipe]="recipe"
+        ></app-recipe-card>
       </div>
     </section>
     <section class="w-full py-5 flex-1">
